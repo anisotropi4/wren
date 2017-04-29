@@ -123,7 +123,7 @@ Consolidate this census data
 $ create_table.py gb-census-report-02.tsv 
 $  < census-report.sql psql -U eugene -h pg-server
 ```
-This creates the 'gb-census-report.tsv' in the current directory
+This creates the 'gb-census-report-03.tsv' in the current directory
 
 ### Identify zero population PostCode sectors  
 
@@ -131,6 +131,13 @@ Create a list of **ID** with zero-population in the 'zero-census-id.tsv' file us
 ```
 $ < new-census-id.tsv tail -n +2 | sort -u > unique-census-id.tsv
 $ (echo id; diff sector-id.tsv unique-census-id.tsv | sed -n 's/< \(.*\)$/\1/p') > zero-census-id.tsv
+```
+
+## Create the Census data report
+Combine the 'zero-census-id.tsv' file with the census report data to create a complete set of data for modelling
+
+``` 
+$ (cat gb-census-report-03.tsv; < zero-census-id.tsv sed -n 's/^(.*\)$/\1\t0\t0\t0\t0\t0\t0\t0/p') > gb-census-report.tsv
 ```
 
 The **ID** file will be used in the Model section to join the geographic and census data
