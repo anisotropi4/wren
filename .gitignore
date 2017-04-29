@@ -1,5 +1,15 @@
+# edit
+*~
+
+#*#
+
 # Compiled
 *.elc
 
 # Packaging
 .cask
+
+# data files
+*.xlsx
+*.tsv
+*.zip
