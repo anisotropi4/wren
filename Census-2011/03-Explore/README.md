@@ -1,6 +1,6 @@
 # Explore  
 
-In the Explore section the link between the geography and census data is identified to for the visualisation in the Model to go ahead  
+In the Explore section the link between the geography and census data is identified and data issues fixed  
 
 ## Assumptions  
 
@@ -38,7 +38,6 @@ Using libreoffice calc
 
 ```
 $ more gb-census-report-01.tsv 
-
 postcode_sector	population	males	females	household	communal_establishment	child	area_ha
 AB10 1	2284	1184	1100	2280	4	13	73
 AB10 6	10737	5446	5291	10594	143	88	166
@@ -106,10 +105,31 @@ $ more id-report.txt
 < AL1  2
 < AL1  3
 ```
-  Based on this
+  Based on this the following example show data issues with the census **post_code**
   
   * The census **post_code** `AB12 3 (part) Aberdeen City` should map to sector **ID** `AB12 3` with extraneous text removed
   * The census **post_code** `AL1  1` should map to sector **ID** `AL1 1` with multiple space removed  
   * The census **post_code** does not contain sector **ID** `B3 3` corresponding to a sector with no population  
-  
-  
+
+### Create the ID element for census data
+
+Create the 'gb-census-report-02.tsv' with an **ID** column 
+```
+$ cut -f 1 gb-census-report-01.tsv | sed 's/  */ /g; s/ (.*$//; s/postcode_sector/ID/' > new-census-id.tsv
+$ paste -d '\t' new-census-id.tsv gb-census-report-01.tsv > gb-census-report-02.tsv
+```
+Consolidate the census data in the 'gb-census-report-03.tsv' 
+```
+$ create_table.py gb-census-report-02.tsv 
+$  < census-report.sql psql -U eugene -h pg-server
+```
+
+### Identify zero population PostCode sectors  
+
+Create a list of **ID** with zero-population in the 'zero-census-id.tsv' file using the aggregated PostCode sector in 'new-census-id.tsv'  
+```
+$ < new-census-id.tsv tail -n +2 | sort -u > unique-census-id.tsv
+$ (echo id; diff sector-id.tsv unique-census-id.tsv | sed -n 's/< \(.*\)$/\1/p') > zero-census-id.tsv
+```
+
+The **ID** file will be used in the Model section to join the geographic and census data
