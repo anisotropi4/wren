@@ -15,14 +15,18 @@ The Scrub activities assume
 
 Create the 'PostalSector.json' file and transforms this from Ordnance Survey (OS 1936/ESPG:27700) to standard World Geodetic System (WGS 84/EPSG:4326) coordinates    
  
- `$ cd PostalCode-Sector  
-  $ unzip ../../01-Obtain/PostalBoundariesOpen2012.zip  
-  $ unzip PostalBoundariesSHP.zip`  
+```
+$ cd PostalCode-Sector
+$ unzip ../../01-Obtain/PostalBoundariesOpen2012.zip
+$ unzip PostalBoundariesSHP.zip
+```
 
 #### Create the 'PostSector.json' GeoJSON file for the visualisation  
-  `$ ogr2ogr -t_srs EPSG:4326 -f GeoJSON PostalBoundaries.json PostalBoundaries.shp
-   $ mv PostalSector.json ..  
-   $ cd ..`  
+```
+$ ogr2ogr -t_srs EPSG:4326 -f GeoJSON PostalSector.json PostalSector.shp  
+$ mv PostalSector.json ..  
+$ cd ..
+```
 
 ## Extract the population data  
 
@@ -41,7 +45,9 @@ Extract the English, Welsh and Scottish population and area data to 'tsv' files 
 
 Convert the England and Wales from a comma-separated 'csv' tab-separated variable 'tsv' file format  
 
-  `$ < england-and-wales_data.csv sed 's/,/\t/g' > england-and-wales_data.tsv`
+```
+$ < england-and-wales_data.csv sed 's/,/\t/g' > england-and-wales_data.tsv
+```
 
 Them edit the file to remove extraneous columns and rows and set the correct header
 
@@ -49,8 +55,10 @@ Them edit the file to remove extraneous columns and rows and set the correct hea
 
 I use the 'xlsx2tsv' script by breandano on gist https://gist.github.com/22764
 
- `$ xlsx2tsv.py scotland-islands.xlsx 2 > scotland-islands.tsv
-  $ xlsx2tsv.py scotland-mainland.xlsx 2 > scotland-mainland.tsv`  
+```
+$ xlsx2tsv.py scotland-islands.xlsx 2 > scotland-islands.tsv
+$ xlsx2tsv.py scotland-mainland.xlsx 2 > scotland-mainland.tsv
+```
 
 Them edit the file to remove extraneous columns and rows and set the correct header
 
@@ -64,25 +72,31 @@ Create a combined 'gb-census-report-01.tsv' tab-separated census report
 
 Create the table sql scripts:  
 
-  `$ for i in *.tsv
-   $ do  
-   $ create_table.py ${i}.tsv  
-   $ done`  
+```
+$ for i in *.tsv
+$ do  
+$ create_table.py ${i}.tsv  
+$ done
+```
 
 Load the data into the PostgreSQL server 'pg-server' username 'raven':  
   
-  `$ for i in table_*.sql
-   $ do  
-   $ < ${i} psql -U raven -h pg-server  
-   $ done`  
+```
+$ for i in table_*.sql
+$ do  
+$ < ${i} psql -U raven -h pg-server  
+$ done
+```
 
 #### Generate the combined census report 'gb-census-report-01.tsv'  
 
-  `$ < census-report.sql psql -U raven -h pg-server`  
+`$ < census-report.sql psql -U raven -h pg-server`  
 
 Move the file into the '02-Scrub' directory:
 
-   `$ mv gb-census-report-01.tsv ..  
-    $ cd ..`  
+```
+$ mv gb-census-report-01.tsv ..
+$ cd ..
+```
 
 In the next stage 'Explore' is to link the geography and population report data  
