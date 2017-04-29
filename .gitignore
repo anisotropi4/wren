@@ -11,6 +11,8 @@
 
 # data files
 *.csv
+*.json
+*.ndjson
 *.tsv
 *.xlsx
 *.zip
@@ -25,6 +27,7 @@ table_*.sql
 # geography files
 *.dbf
 *.prj
+*.qgs
 *.qix
 *.qml
 *.qpj
