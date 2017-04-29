@@ -1,10 +1,12 @@
+# Obtain
+
 The data used for the 2011 Census cloropleth visualisations consists of:
 
-1) PostCode shapefile:  
+## PostCode shapefile:  
 
-  Download the ~280MB 'PostalBoundariesOpen2012.zip' PostCode Sector shapefiles for Great Britain (England, Scotland and Wales) from GeoLytix 'https://geolytix.net/?postal_geom'  
+   Download the ~280MB 'PostalBoundariesOpen2012.zip' PostCode Sector shapefiles for Great Britain (England, Scotland and Wales) from GeoLytix 'https://geolytix.net/?postal_geom'  
 
-2a) Census data for England and Wales
+## Census data for England and Wales
 
 Download census data for England and Wales via a webbrowser from 'nomis' here 'http://www.nomisweb.co.uk/query/select/getdatasetbytheme.asp?opt=3' then with the following options:  
   * The data was from 'Census 2011'
@@ -16,7 +18,7 @@ Download census data for England and Wales via a webbrowser from 'nomis' here 'h
 
 Rename this ~7MB data comma-seperated data file 'england-and-wales_data.csv'
 
-2b) Census data for Scotland
+## Census data for Scotland
 
 Download census data for Scotland via a webbrowser from 'http://www.scotlandscensus.gov.uk/ods-web/standard-outputs.html' then with the following options  
   * The data was 'Census 2011'  
