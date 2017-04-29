@@ -13,4 +13,4 @@ from table_gb_census_report_02 i
 group by i.id
 order by id;
 
-\copy _tmp to 'gb-census-report-03.tsv' with csv delimiter E'\t' header;
+\copy _tmp to 'gb-census-report.tsv' with csv delimiter E'\t' header;
