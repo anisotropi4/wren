@@ -118,11 +118,12 @@ Create the 'gb-census-report-02.tsv' with an **ID** column
 $ cut -f 1 gb-census-report-01.tsv | sed 's/  */ /g; s/ (.*$//; s/postcode_sector/ID/' > new-census-id.tsv
 $ paste -d '\t' new-census-id.tsv gb-census-report-01.tsv > gb-census-report-02.tsv
 ```
-Consolidate the census data in the 'gb-census-report-03.tsv' 
+Consolidate this census data 
 ```
 $ create_table.py gb-census-report-02.tsv 
 $  < census-report.sql psql -U eugene -h pg-server
 ```
+This creates the 'gb-census-report.tsv' in the current directory
 
 ### Identify zero population PostCode sectors  
 
