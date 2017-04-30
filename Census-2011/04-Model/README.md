@@ -1,6 +1,8 @@
 # Model
 
-This Model section closely follows Mike Bostock's approach in his article 'Command Line Cartography' here https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c. Errors or omissions are my own
+  Model the census and geography data, calculating the population density and simplifying the large geography dataset  
+  
+  This section closely follows Mike Bostock's approach in his article 'Command Line Cartography' here https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c. Errors or omissions are my own
 
 ## Assumptions
 
