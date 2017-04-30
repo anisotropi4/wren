@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# set up the data in the 'setup' directory
 
 for i in $@
 do
@@ -8,4 +8,4 @@ do
     jq -c '.properties.density_ha' setup/${i}-density.ndjson | jq -c -s '. | ([min, max])' | sed 's/\]//g; s/\[/density_ha\t/g; s/,/\t/g'
     jq -c '.properties.sqrt' setup/${i}-density.ndjson | jq -c -s '. | ([min, max])' | sed 's/\]//g; s/\[/sqrt density_ha\t/g; s/,/\t/g'
     jq -c '.properties.log' setup/${i}-density.ndjson | jq -c -s '. | ([min, max])' | sed 's/\]//g; s/\[/log density_ha\t/g; s/,/\t/g'
-done | tee setup/${i}-parameters.tsv
+done | tee parameters.tsv
