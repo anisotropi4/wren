@@ -13,6 +13,7 @@
 *.csv
 *.json
 *.ndjson
+*.svg
 *.tsv
 *.xlsx
 *.zip
