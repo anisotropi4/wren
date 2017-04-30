@@ -111,7 +111,7 @@ $ < output/PostalSector-simple-conic.ndjson geo2topo -n tracts=- | topoquantize 
 
 ### Render the geography data
    
-   (Optionally) render the geography to 'svg' files into 
+   (Optionally) render the geography to 'svg' files  
 
 ```
 $ geo2svg -n -w 960 -h 960 output/PostalSector-conic.ndjson > PostalSector-conic.svg
