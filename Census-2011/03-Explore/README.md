@@ -121,7 +121,7 @@ $ paste -d '\t' new-census-id.tsv gb-census-report-01.tsv > gb-census-report-02.
 Consolidate this census data 
 ```
 $ create_table.py gb-census-report-02.tsv 
-$  < census-report.sql psql -U eugene -h pg-server
+$  < census-report.sql psql -U raven -h pg-server
 ```
 This creates the 'gb-census-report-03.tsv' in the current directory
 
