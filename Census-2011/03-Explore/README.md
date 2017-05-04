@@ -121,7 +121,8 @@ $ paste -d '\t' new-census-id.tsv gb-census-report-01.tsv > gb-census-report-02.
 Consolidate this census data 
 ```
 $ create_table.py gb-census-report-02.tsv 
-$  < census-report.sql psql -U raven -h pg-server
+$ < table_gb_census_report_02.sql psql -U raven -h pg-server
+$ < census-report.sql psql -U raven -h pg-server
 ```
 This creates the 'gb-census-report-03.tsv' in the current directory
 
@@ -137,7 +138,7 @@ $ (echo id; diff sector-id.tsv unique-census-id.tsv | sed -n 's/< \(.*\)$/\1/p')
 Combine the 'zero-census-id.tsv' file with the census report data to create a complete set of data for modelling
 
 ``` 
-$ (cat gb-census-report-03.tsv; < zero-census-id.tsv sed -n 's/^(.*\)$/\1\t0\t0\t0\t0\t0\t0\t0/p') > gb-census-report.tsv
+$ (cat gb-census-report-03.tsv; < zero-census-id.tsv sed -n 's/^\(.*\)$/\1\t0\t0\t0\t0\t0\t0\t0/p') > gb-census-report.tsv
 ```
 
 The **ID** file will be used in the Model section to join the geographic and census data
