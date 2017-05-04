@@ -2,7 +2,7 @@
 
 This is where the initial cut of the Great Britain geography GeoJSON and population files are created  
  
-## Assumuptions  
+## Assumptions  
 The Scrub activities assume  
    * The 'ogr2ogr' utility is installed. On a Debian based Linux version run:  
   `$ sudo apt install gdal-bin`  
@@ -21,12 +21,14 @@ $ unzip ../../01-Obtain/PostalBoundariesOpen2012.zip
 $ unzip PostalBoundariesSHP.zip
 ```
 
-#### Create the 'PostSector.json' GeoJSON file for the visualisation  
+#### Create the 'PostalSector.json' GeoJSON file for the visualisation  
+The PostalSector shapefile data is in OSGB 1936 (Ordnance Survey) format. Convert this to WG84 (EPSG:4326) GeoJSON  
 ```
 $ ogr2ogr -t_srs EPSG:4326 -f GeoJSON PostalSector.json PostalSector.shp  
 $ mv PostalSector.json ..  
-$ cd ..
 ```
+
+These command are contained in the script 'convert-sector.sh'
 
 ## Extract the population data  
 
@@ -43,30 +45,47 @@ Extract the English, Welsh and Scottish population and area data to 'tsv' files 
 
 #### Convert the England and Wales data to the tab-separated variable 'tsv' file format  
 
-Convert the England and Wales from a comma-separated 'csv' tab-separated variable 'tsv' file format  
+Convert the England and Wales from a comma-separated 'csv' tab-separated variable 'tsv' file format and add the file 'header'  
 
 ```
-$ < england-and-wales_data.csv sed 's/,/\t/g' > england-and-wales_data.tsv
+$ cd PostCode-Sector
+$ cp ../../01-Obtain/england-and-wales_data.csv .
+$ cp header england-and-wales_data.tsv
+$ < england-and-wales_data.csv | england-and-wales_data.csv sed -n '/^"[A-Z]....[0-9]",/p' | sed 's/,/\t/g' > england-and-wales_data.tsv
 ```
 
-Them edit the file to remove extraneous columns and rows and set the correct header
+Alternatively edit the file to remove extraneous columns and rows and set the correct header from the 'header' file
 
 #### Extract the data from the Scotish 'xslx' reports to the tab-separated variable 'tsv' file format  
 
-I use the 'xlsx2tsv' script by breandano on gist https://gist.github.com/22764
+Flatten the 'xlsx' files and then edit the file to remove extraneous columns and rows and set the correct header
+
+I use the 'xlsx2tsv' script on gist (https://gist.github.com/22764)
 
 ```
-$ xlsx2tsv.py scotland-islands.xlsx 2 > scotland-islands.tsv
-$ xlsx2tsv.py scotland-mainland.xlsx 2 > scotland-mainland.tsv
+$ cp ../../01-Obtain/scotland-*.xlsx .
+$ cp header scotland-islands.tsv
+$ cp header scotland-mainland.tsv
+$ xlsx2tsv.py scotland-islands.xlsx 2 | sed -n '/^\t[A-Z][A-Z0-9]..*\t/p' | sed 's/^\t//' >> scotland-islands.tsv
+$ xlsx2tsv.py scotland-mainland.xlsx 2 | sed -n '/^\t[A-Z][A-Z0-9]..*\t/p' | sed 's/^\t//' >> scotland-mainland.tsv
 ```
 
-Them edit the file to remove extraneous columns and rows and set the correct header
+Alternatively edit the file by hand using a standard spreadsheet tool e.g. libreoffice and save in the 'tsv' file format 
 
-Alternatively edit the file by hand using a standard spreadsheet tool e.g. libreoffice and save in the 'tsv' file format
+The combined England, Scotland and Wales file creation is contained in the 'run.sh' script  
 
-#### Combine and scrub the England and Wales, and Scottish Population data  
+## Combine and scrub the England and Wales, and Scottish Population data  
 
-Create a combined 'gb-census-report-01.tsv' tab-separated census report
+Combine the census data to create a combined 'gb-census-report-01.tsv' tab-separated census report using a 'PostgreSQL' database
+
+This assumes:  
+  * A PostgreSQL database running on the host 'pg-server' with a 'raven' user 
+  * The 'create_table.py' python script 
+  * The 'PostgreSQL' client tools installed
+
+Details about how to set up a PostgreSQL database using 'docker' containers can be found here under the 'postgres' directory of 'https://github.com/guidoeco/docker'  
+
+The 'create_table.py' script is a gist here 'https://gist.github.com/anisotropi4' or as part of the 'goldfinch' 'bin' scripts here 'https://github.com/anisotropi4/goldfinch'  
 
 #### Create and run psql scripts to load population data in a PostgreSQL database
 
@@ -88,15 +107,15 @@ $ < ${i} psql -U raven -h pg-server
 $ done
 ```
 
-#### Generate the combined census report 'gb-census-report-01.tsv'  
+#### Generate the combined census report  
 
-`$ < census-report.sql psql -U raven -h pg-server`  
-
-Move the file into the '02-Scrub' directory:
+  Generate the combined census report 'gb-census-report-01.tsv'and  move the file into the '02-Scrub' directory:  
 
 ```
+$ < census-report.sql psql -U raven -h pg-server  
 $ mv gb-census-report-01.tsv ..
-$ cd ..
 ```
+
+The database creation and reporting commands are contained in the 'create-database.sh' script
 
 In the next stage 'Explore' is to link the geography and population report data  
