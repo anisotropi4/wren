@@ -9,10 +9,10 @@
 The Model section assumes the following programs and modules are installed  
   * The 'gb-census-report.tsv' and 'PostalSector.json' files are in the current directory having previously been created in the '03-Explore' directory
   * As before 'nodejs' and 'jq' are installed  
-  * The 'd3-geo-projection' and 'geojson-area' modules for 'nodejs' are installed  
+  * The 'd3-geo-projection', 'ndjson-cli', 'topojson-server', 'topojson-simplify', 'topjson-client' and 'geojson-area' modules for 'nodejs' are installed  
+  * The 'node' is in the current $PATH 
 ```
-$ sudo npm install -g d3-geo-projection
-$ npm install geojson-area
+$ npm install d3-geo-projection ndjson-cli topojson-server topojson-simplify geojson-area 
 ```
    * The 'csvkit' python module here https://csvkit.readthedocs.io/en/1.0.2/index.html
 ```
@@ -36,7 +36,7 @@ $ < PostalSector.json jq -c '.features[]' > setup/PostalSector.ndjson
 $ cp setup/PostalSector.ndjson run/
 ```
   
-  Based on shapefile data, calculate the area of the Sector  
+  Based on geography data, calculate the area of the Sector  
 ```
 $ < run/PostalSector.ndjson ./areas.sh > setup/PostalSector-areas.ndjson
 ```

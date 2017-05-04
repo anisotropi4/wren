@@ -1,16 +1,22 @@
 # iNterpret
 
-  Render the 
+  Render the population chlorpleths using a number of different scales  
  
 ## Assumptions  
 
-  The 'iNterpret' assumes the census and geography 'ndjson' format data is in the current directory from the 'output' directory in the 'Model'  
+  The iNterpret section assumes the census and geography 'ndjson' format data is in the current directory from the 'output' directory in the 'Model'  
 
 ```
 $ cp ../04-Model/output/gb-census-report-density.ndjson .
 $ cp ../04-Model/output/PostalSector-simple-conic.ndjson .
 ```
 
+  Plus the 'ndjson-cli' module is installed
+
+```
+$ npm install ndjson-cli
+```
+  
 ## Setup population density data  
 
    Calculate population density, and square-root and log values of these parameters and combine this with the geography data 
