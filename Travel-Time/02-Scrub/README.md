@@ -6,14 +6,27 @@
 
 ### Train-Time Data
 
-  This creates the new-line delimited 'Stations_HW_AM.ndjson' file. As the train-time data is large, to avoid paging the data is split and runs the 'jq-script.sh'  
+  This creates the new-line delimited 'Stations_<type>_<time>.ndjson' file. The data includes connection times for road, public transport and rail:
+
+File name | Destination | Time of Day | Modal Type | Year 2011 | Rows |
+----------|-------------|-------------|------------|-----------|---------|
+Rail-stations-travel-times.zip 
+Stations_HW_AM.csv | Rail stations | AM peak (7am to 10am) | Car | 2011 | 6,274,704
+Stations_HW_Mid.csv | Rail stations | Mid peak (10am to 4pm) | Car | 2011 | 6,274,704
+Stations_HW_PM.csv | Rail stations | PM peak (4pm to 7pm) |Car | 2011 | 6,274,704
+Stations_PT_AM.csv | Rail stations | AM peak (7am to 10am) | Public transport | 2011 | 2,244,943
+Stations_PT_Mid.csv |	Rail stations | Mid peak (10am to 4pm) | Public transport | 2011 | 3,733,339
+Stations_PT_PM.csv |	Rail stations | PM peak (4pm to 7pm) | Public transport | 2011 | 3,646,483
+Stations_PT_Late.csv |	Rail stations | Late (7pm to midnight) | Public transport | 2011 | 3,217,877
+
+  As the train-time data is large, to avoid paging the data is split and runs the 'jq-script.sh'  
 
 ```
 $ cat jq-script.sh
 sed 's/"//g' | jq --slurp --raw-input --raw-output -c 'split("\n") | map(split(",")) | .[] | select(.[0] != null) | {CRS: .[3], (.[0]): .[1]}'
 ```
 
-  The 'Stations_HW_AM.ndjson' new-line delimited json file is then blocks of 2**18 = 262144 lines  
+  For example, for the 'Stations_HW_AM.ndjson' new-line delimited json file is then blocks of 2**18 = 262144 lines  
 ```
 $ tail -n +2 Stations_HW_AM.csv | \
         split -l 262144 --filter=./jq-script.sh | \

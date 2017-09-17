@@ -1,19 +1,22 @@
 #!/bin/sh -x
 # Train travel-time data
 
-if [ ! -f Stations_HW_AM.csv ]
-then
-   unzip Rail-stations-travel-times.zip Stations_HW_AM.csv
-fi
+for i in Stations_HW_AM Stations_HW_Mid Stations_HW_PM Stations_PT_AM Stations_PT_Mid Stations_PT_PM Stations_PT_Late
+do
+    if [ ! -f ${i}.csv ]
+    then
+        unzip Rail-stations-travel-times.zip ${i}.csv
+    fi
 
-if [ ! -f Stations_HW_AM.ndjson ]
-then
-    tail -n +2 Stations_HW_AM.csv | \
-        split -l 262144 --filter=./jq-script.sh | \
-        sort | \
-        split -l 8192 --filter="jq -c -s 'group_by(.CRS) | .[] | add'" | \
-        jq -c -s 'group_by(.CRS) | .[] | add' > Stations_HW_AM.ndjson
-fi
+    if [ ! -f ${i}.ndjson ]
+    then
+        tail -n +2 ${i}.csv | \
+            split -l 262144 --filter=./jq-script.sh | \
+            sort | \
+            split -l 8192 --filter="jq -c -s 'group_by(.CRS) | .[] | add'" | \
+            jq -c -s 'group_by(.CRS) | .[] | add' > ${i}.ndjson
+    fi
+done
 
 if [ ! -s LLSOA-2001-England-and-Wales.ndjson ]
 then
