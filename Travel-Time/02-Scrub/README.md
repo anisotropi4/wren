@@ -4,6 +4,27 @@
 
   The 'run.sh' script contains script  
 
+### Assumptions
+
+The Scrub activities assume 
+  * The 'jq' utility. On a Debian based Linux version run:
+  `$ sudo apt install jq`
+
+  * The Node.js 'npm' utility. On a Debian based Linux version run:
+  `$ sudo apt install npm`
+
+  * The following 'd3' npm packages installed as root:
+
+``` 
+$ sudo npm install -g d3-geo-projection
+$ sudo npm install -g d3-format
+$ sudo npm install -g ndjson-cli
+$ sudo npm install -g ndjson-cli
+$ sudo npm install -g topojson
+$ sudo npm install -g d3
+$ sudo npm install -g d3-scale-chromatic
+```
+
 ### Train-Time Data
 
   This creates the new-line delimited 'Stations_<type>_<time>.ndjson' file. The data includes connection times for road, public transport and rail:
