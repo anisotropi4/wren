@@ -11,18 +11,19 @@ SCALE="d3.scaleLinear().domain([0, 450]).clamp(true)(d3.format('.0f')(d.properti
 
 FILL="d3.interpolateYlOrRd(d.properties.scale)"
 
+        
+if [ ! -f LLSOA-2001-England-and-Wales.ndjson ]
+then
+    ln ../02-Scrub/LLSOA-2001-England-and-Wales.ndjson
+fi
+
 for CRS in ABD ADV ASI BAN BBN BDI BDM BFR BHI BHM BIC BKG BMH BMO BMS BNG BON BPN BPW BRE BRI BSK BSW BTH BTN BWK CAR CBE CBG CDF CDQ CHD CHM CHX CLJ CLT CNM COL COV CPM CRE CST CTK CTM CTR DAR DBY DEE DFD DHM DID DKG DON EAL EBF EBN ECR EDB EGR EMD EPS ESL EUS EXC EXD FKC FST GCR GLC GLD GLM GLQ GRA GTW HFD HGS HGT HHE HRW HUD HUL HWN HWY IFD INV IPS KGX KNG LAN LBG LBO LCN LDS LEI LIV LMS LPY LST LUT LVC MAC MAI MAN MBR MCO MCV MDE MIA MKC MYB NBY NCL NMP NNG NOT NRW NTA NUN NWP NXG OXF PAD PBO PLY PMH PMS PNZ POO PRE PTH PUT RAY RDG RDH RMD RMF RUG RUN SAL SCA SEV SHF SHR SLO SNF SOA SOC SOT SOU SOV SPL SPT SRA SSD STA SUR SVG SWA SWI SYL TAU TBD TBW TON TRU TWI VIC VXH WAE WAT WBQ WEY WFJ WGC WGN WIM WIN WKF WNR WOK WOS WVH YRK
 do
     for i in PT_AM PT_Mid PT_PM PT_Late 
     do
-        if [ ! -s ${i}.ndjson ]
+        if [ ! -f Stations_${i}.ndjson ]
         then
             ln ../02-Scrub/Stations_${i}.ndjson
-        fi
-        
-        if [ ! -s LLSOA-2001-England-and-Wales.ndjson ]
-        then
-            ln ../02-Scrub/LLSOA-2001-England-and-Wales.ndjson
         fi
         # round time to nearest minute
         # if the time element is absent sets an arbitrary value of 999.9 minutes 
