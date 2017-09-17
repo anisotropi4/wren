@@ -4,6 +4,12 @@
 
   The 'run.sh' script contains the script elements of the data  
 
+  Determine the stations 'CRS' codes in the data:
+
+```
+$ jq '.CRS' Stations_HW_AM.ndjson
+```
+
 ### Combine Rail Train-Time and Super Output Areas geography data  
 
    Create the 'topo.json' topoJSON file format by combinging the Rail Train-Time and Super Output Area geography data and render against a Conic Equal Area projection on a 960 x 640 canvas. This uses the 'geo2topo', 'geoproject', 'ndjson-map', 'toposimplify', 'topoquantize' and 'jq' tools in the pipeline
