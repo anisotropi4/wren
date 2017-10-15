@@ -9,6 +9,7 @@
 ```
 $ jq '.CRS' Stations_HW_AM.ndjson
 ```
+  This gives a list of 183 unique CRS station codes for which data has been provided
 
 ### Combine Rail Train-Time and Super Output Areas geography data  
 
@@ -37,3 +38,9 @@ $ < topo.json topo2geo -n tracts=- | \
 ```
 
    This creates the static SVG file for York
+
+### Render all Public Transport data
+
+   The Department of Transport Rail Travel-Time data contains timings for different times in the day and for combined car and rail (suffix HW) and combined public transport and trail (suffice PT) data. The first contained in the 'run.sh' script renders the combined Rail/Public Transport data for four times in the day
+
+   The 'AM', 'Mid', 'PM' and 'Late' files are then hard-linked to the files '01', '02', '03', '04' for further processing

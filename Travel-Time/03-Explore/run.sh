@@ -27,7 +27,7 @@ do
         fi
         # round time to nearest minute
         # if the time element is absent sets an arbitrary value of 999.9 minutes 
-        if [ ! -s topo-${CRS}-${i}.json ]
+        if [ ! -s output/topo-${CRS}-${i}.json ]
         then
             geo2topo -n tracts=<(ndjson-join --left 'd.id' \
                                              <(jq -s -c '{"type": "FeatureCollection", "features": .}' LLSOA-2001-England-and-Wales.ndjson | \
@@ -36,16 +36,26 @@ do
                                              <(jq -c 'select(.CRS=="'${CRS}'") | del(.CRS) | to_entries | map({id: .key, time: (.value | tonumber | . + 0.5 | floor)})[]' Stations_${i}.ndjson) | \
                                         ndjson-map -r d3=d3 '{type: d[0].type, properties: {title: d[0].id, time: (d[1] != null && d[1].time || 999.9)}, geometry: d[0].geometry}') | \
                 toposimplify -p 1 -f | \
-                topoquantize 1E6 > topo-${CRS}-${i}.json
+                topoquantize 1E6 > output/topo-${CRS}-${i}.json
         fi
         
-        if [ ! -s topo-${CRS}-${i}.svg ]
+        if [ ! -s output/topo-${CRS}-${i}.svg ]
         then
             < topo-${CRS}-${i}.json topo2geo -n tracts=- | \
                 ndjson-map -r d3=d3 '(d.properties.scale='"${SCALE}"',d)' | \
                 ndjson-map -r d3=d3-scale-chromatic '(d.properties.fill='"${FILL}"', d)' | \
-                geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > topo-${CRS}-${i}.svg #| \
+                geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > output/topo-${CRS}-${i}.svg #| \
             #sed '$d'             
         fi
     done
 done
+
+# Create
+for CRS in ABD ADV ASI BAN BBN BDI BDM BFR BHI BHM BIC BKG BMH BMO BMS BNG BON BPN BPW BRE BRI BSK BSW BTH BTN BWK CAR CBE CBG CDF CDQ CHD CHM CHX CLJ CLT CNM COL COV CPM CRE CST CTK CTM CTR DAR DBY DEE DFD DHM DID DKG DON EAL EBF EBN ECR EDB EGR EMD EPS ESL EUS EXC EXD FKC FST GCR GLC GLD GLM GLQ GRA GTW HFD HGS HGT HHE HRW HUD HUL HWN HWY IFD INV IPS KGX KNG LAN LBG LBO LCN LDS LEI LIV LMS LPY LST LUT LVC MAC MAI MAN MBR MCO MCV MDE MIA MKC MYB NBY NCL NMP NNG NOT NRW NTA NUN NWP NXG OXF PAD PBO PLY PMH PMS PNZ POO PRE PTH PUT RAY RDG RDH RMD RMF RUG RUN SAL SCA SEV SHF SHR SLO SNF SOA SOC SOT SOU SOV SPL SPT SRA SSD STA SUR SVG SWA SWI SYL TAU TBD TBW TON TRU TWI VIC VXH WAE WAT WBQ WEY WFJ WGC WGN WIM WIN WKF WNR WOK WOS WVH YRK
+do
+    for i in PT_AM PT_Mid PT_PM PT_Late 
+    do
+	      ln output/topo-${CRS}-${i}.svg `ls output/topo-${CRS}-${i}.svg | sed 's/_AM/_01/;s/_Mid/_02/;s/_PM/_03/;s/_Late/_04/'`
+    done
+done
+
