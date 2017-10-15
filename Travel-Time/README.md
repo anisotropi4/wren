@@ -1,12 +1,12 @@
 # Rail Travel-Time
 
-Scripts and pipeline to create Rail Travel-Time cloropleths for England and Wales using Lower Layer Super Output Areas 2001/2011 DfT 'experimental' travel-time data in the 'Obtain', 'Scrub' and  'Expore-Model' directories  
+Scripts and pipeline to create Rail Travel-Time cloropleths for England and Wales using Lower Layer Super Output Areas 2001/2011 DfT 'experimental' travel-time data in the 'Obtain', 'Scrub' and  'Explore' and 'Model' directories  
 
 This is based on the [**Journey time publications**](https://www.gov.uk/government/collections/journey-time-statistics) by the UK Department for Transport under [**Experimental connectivity statistics: data tables**](https://www.gov.uk/government/statistics/connectivity-travel-time-indicators-england-2013-experimental-statistics)
 
 The raw-data is available under [**Transport Connectivity Travel Time Data**](https://data.gov.uk/dataset/connectivity-travel-time-data)
 
-Data is available includes connection times for road, public transport and rail. However the visualisations in these examples focus on Rail:
+Data is available includes connection times for road, public transport and rail. The visualisations in this project focus on the combined Public Transport with Rail data:
 
 File name | Destination | Time of Day | Modal Type | Year 2011 | Rows |
 ----------|-------------|-------------|------------|-----------|---------|
