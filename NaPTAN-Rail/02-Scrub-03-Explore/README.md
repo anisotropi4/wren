@@ -81,7 +81,8 @@ Looking at the fields frequency count:
     3 NaPTAN StopPoints StopPoint Descriptor
     7 NaPTAN StopPoints StopPoint Place
 
+As the frequency analysis shows the NaPTAN data structure consists of `NaPTAN/StopPoints/StopPoint` and `NaPTAN/StopAreas/StopArea`.
+
 ### Split the data into `StopPoint` and `StopArea` files
 
-As the frequency analysis shows the NaPTAN data structure consists of `NaPTAN/StopPoints/StopPoint` and `NaPTAN/StopAreas/StopArea`. Using the `dump-xml.sh` and `dump-ndjson.sh` scripts from <https://github.com/anisotropi4/goldfinch>, extract data in `StopPoint.xml` and `StopArea.xml` files in the `output` directory and convert the xml into ndjson files.
-
+Using the `dump-xml.sh` and `dump-ndjson.sh` scripts from <https://github.com/anisotropi4/goldfinch>, extract data in `StopPoint.xml` and `StopArea.xml` files in the `output` directory and convert the xml into ndjson files.
