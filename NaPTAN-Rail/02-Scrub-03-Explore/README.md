@@ -1,8 +1,8 @@
 # Scrub and Explore  
 
-As the content of the National Public Transport Access Nodes (NaPTAN) Rail visualisation appears to be clean, the Scrub and Explore stages are combined.
+As the content of the National Public Transport Access Nodes (NaPTAN) rail visualisation appears to be clean, the Scrub and Explore stages are combined.
 
-The `investigate.sh` script contains the elements used to explore the data.
+The `investigate.sh` script contains the elements used to explore the data which looks to extract geographic rail information from the NaPTAN dataset for visualisation.
 
 ## Assumptions  
 
@@ -31,7 +31,9 @@ As the `Naptan.xml` file is large (~582MB), the first step to look at the data-s
     > quit
     Have a nice day.
 
-Running the following `xpath` script `tree-dump.xq` and shell script to tidy-up the output (remove head/footer noise plus reorder fields) against the NaPTAN data dumps out tag information with a field count into the `tree-dump.tsv`.
+### Dump field information
+
+Running the following `xpath` script `tree-dump.xq` and shell script to tidy-up the output (remove head/footer noise plus reorder fields) against the NaPTAN data dumps out field information with a field count into the `tree-dump.tsv`.
 
     < tree-dump.xq basex | sed '/^$/d' | tail -n +5 | sed 's/^\([ 0-9]*\) \(.*$\)/\2\t\1/' | head -n -2 > tree-dump.tsv
 
@@ -43,7 +45,19 @@ The output is then:
     NaPTAN	StopPoints	StopPoint	Place	Location	Translation	GridType	7
     ...
 
-### Field structure frequency analysis 
+### Investigate rail related fields
+
+Look and count tags related to `rail` fields in the NaPTAN dataset field dump for further analysis:
+
+    $ fgrep -i rail tree-dump.tsv | sort | uniq -c
+    2667 NaPTAN	StopPoints	StopPoint	StopClassification	OffStreet	Rail	AccessArea	7
+    2624 NaPTAN	StopPoints	StopPoint	StopClassification	OffStreet	Rail	AnnotatedRailRef	CrsRef	8
+    2624 NaPTAN	StopPoints	StopPoint	StopClassification	OffStreet	Rail	AnnotatedRailRef	StationName	8
+    2624 NaPTAN	StopPoints	StopPoint	StopClassification	OffStreet	Rail	AnnotatedRailRef	TiplocRef	8
+    4533 NaPTAN	StopPoints	StopPoint	StopClassification	OffStreet	Rail	Entrance	7
+       3 NaPTAN	StopPoints	StopPoint	StopClassification	OffStreet	Rail	Platform	7
+
+### Field structure analysis 
 
 Looking at the fields frequency count:
 
@@ -69,6 +83,5 @@ Looking at the fields frequency count:
 
 ### Split the data into `StopPoint` and `StopArea` files
 
-The frequency analysis shows the NaPTAN data structure consists of `NaPTAN/StopPoints/StopPoint` and `NaPTAN/StopAreas/StopArea`. Using the `dump-xml.sh` and `dump-ndjson.sh` scripts in the <https://github.com/anisotropi4/goldfinch> into `StopPoint.xml` and `StopArea.xml` files in the `output` directory and convert the xml into ndjson files.
-
+As the frequency analysis shows the NaPTAN data structure consists of `NaPTAN/StopPoints/StopPoint` and `NaPTAN/StopAreas/StopArea`. Using the `dump-xml.sh` and `dump-ndjson.sh` scripts from <https://github.com/anisotropi4/goldfinch>, extract data in `StopPoint.xml` and `StopArea.xml` files in the `output` directory and convert the xml into ndjson files.
 
