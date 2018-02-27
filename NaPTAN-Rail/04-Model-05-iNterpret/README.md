@@ -14,7 +14,6 @@ The Model and iNterpret activities assume
 
   * A copy of the new-line delimited JSON file 'StopPoint.ndjson' from the '02-Scrub-03-Explore/output' directory
 
-
 ## Model the Data Structure
 
 ### Look for elements associated with 'Rail'
