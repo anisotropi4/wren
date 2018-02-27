@@ -1,7 +1,11 @@
 #!/bin/sh
 
+# The count and reordering of fields can be found in the 'suniq.sh' script
+# in the <https://github.com/anisotropi4/goldfinch> repository
+
 echo "Type	Count" > StopTypes.tsv
-< StopPoint.ndjson jq -c -r '.StopClassification.StopType' | ./suniq.sh >> StopTypes.tsv
+< StopPoint.ndjson jq -c -r '.StopClassification.StopType' | sort - | uniq -c | sort -rn | sed 's/^ *\([0-9][0-9]*\) \(.*\)$/\2\t\1/' >> StopTypes.tsv
+
 
 < StopPoint.ndjson jq -c '{AtcoCode} + (.Descriptor | {CommonName, Street, Indicator} ) + (.Place.Location.Translation | {lat: .Latitude, lon: .Longitude}) + (.Place | {node: .NptgLocalityRef}) + (.StopClassification | {stoptype: .StopType}) | del(.[] | select(. == null))' > naptandata.ndjson
 
