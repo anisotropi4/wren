@@ -140,7 +140,7 @@
                  if (d.indicator) output.push("Indicator: " + d.indicator);
                  if (d.street) output.push("Street: " + d.street);
                  if (d.stoptype) output.push("type: " + d.stoptype);
-                 output.push("[" + parseFloat(d.lat).toFixed(6) + "," + parseFloat(d.lon).toFixed(6) + "]");
+                 output.push("[" + parseFloat(d.lat).toFixed(5) + "," + parseFloat(d.lon).toFixed(5) + "]");
                  //output.push("range: " + parseFloat(d.lrange).toFixed(1));
                  if (d.type) output.push("Source: " + d.type);
                  svg.insert("rect")
