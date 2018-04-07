@@ -18,7 +18,7 @@ echo "level-1	level-2	level-3	count" | tee level-3.tsv
 sed 's/>[ \t]*</>\n</g' Naptan.xml > Naptan-fix.xml
 
 mkdir output
-xsplit4.py Naptan-fix.xml --badxml --path output --depth 2
+xml-split4.py Naptan-fix.xml --badxml --path output --depth 2
 
 for i in $(ls output/*.xml)
 do
