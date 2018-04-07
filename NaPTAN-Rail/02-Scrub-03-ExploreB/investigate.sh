@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./dump-tree.py Naptan.xml tree-dump.tsv
+dump-tree.py Naptan.xml tree-dump.tsv
 
 echo total
 wc -l tree-dump.tsv 
@@ -16,12 +16,12 @@ echo level-4
 
 mkdir output
 
-./xml-split.py --split Naptan.xml
+xml-split.py --path output --depth 2 Naptan.xml
 
-for i in $(ls output/*.xml)
+for i in output/*.xml
 do
     echo ${i}
     FILE=$(basename ${i})
     XTAG=$(echo ${FILE} | sed 's/.xml//')
-    < ${i} parallel -j 1 --files --pipe -N1024 add-x-tag.sh | parallel -j 4 "xml-to-ndjson.sh {} ${XTAG}; rm {}" > output/${XTAG}.ndjson
+    < ${i} parallel -j 1 --files --pipe -N1024 add-x-tag.sh | parallel -j 4 "xml-to-ndjson.sh {}; rm {}" > output/${XTAG}.ndjson
 done

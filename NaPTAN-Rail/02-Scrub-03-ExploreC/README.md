@@ -74,9 +74,9 @@ As the frequency analysis shows the NaPTAN data structure consists of `NaPTAN/St
 
 ### Split the data into `StopPoint` and `StopArea` files
 
-Use the `xml-split.py` and `dump-ndjson.sh` scripts from <https://github.com/anisotropi4/goldfinch>, to remove outer xml-tags to extract data in `StopPoint.xml` and `StopArea.xml` files in the `output` directory: 
+Use the `xml-split4.py` and `dump-ndjson.sh` scripts from <https://github.com/anisotropi4/goldfinch>, to remove outer xml-tags to extract data in `StopPoint.xml` and `StopArea.xml` files in the `output` directory: 
 
-    $ ./xml-split.py --depth 2 --path output --split Naptan.xml
+    $ xml-split4.py --badxml --depth 2 --path output --split Naptan.xml
 
 Then convert the xml into ndjson (new-line delimited json):
 
