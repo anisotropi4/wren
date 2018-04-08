@@ -15,16 +15,10 @@ The Scrub activities assume
   
   `$ sudo apt install npm`
 
-  * The following 'd3' npm packages installed as root:
+  * The following 'd3' npm packages are installed in `node_nodes/.bin` directory:
 
 ``` 
-$ sudo npm install -g d3-geo-projection
-$ sudo npm install -g d3-format
-$ sudo npm install -g ndjson-cli
-$ sudo npm install -g ndjson-cli
-$ sudo npm install -g topojson
-$ sudo npm install -g d3
-$ sudo npm install -g d3-scale-chromatic
+$ npm install d3-geo-projection d3-format ndjson-cli topojson d3 d3-scale-chromatic
 ```
 
 ### Train-Time Data

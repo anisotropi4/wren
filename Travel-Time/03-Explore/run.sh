@@ -7,9 +7,11 @@ WIDTH=640
 PROJECTION='d3.geoConicEqualArea().parallels([49, 61]).fitSize(['${WIDTH}','${HEIGHT}'], d)'
 
 TIMESTEP=30.0
-SCALE="d3.scaleLinear().domain([0, 450]).clamp(true)(d3.format('.0f')(d.properties.time / "${TIMESTEP}") * "${TIMESTEP}")"
+SCALE="d3.scaleLinear().domain([450, 0]).clamp(true)(d3.format('.0f')(d.properties.time / "${TIMESTEP}") * "${TIMESTEP}")"
 
-FILL="d3.interpolateYlOrRd(d.properties.scale)"
+#FILL="d3.interpolateYlOrRd(d.properties.scale)"
+FILL="d3.interpolatePlasma(d.properties.scale)"
+#FILL="d3.schemeSpectral[11][d.properties.scale]"
 
         
 if [ ! -f LLSOA-2001-England-and-Wales.ndjson ]
@@ -41,7 +43,7 @@ do
         
         if [ ! -s output/topo-${CRS}-${i}.svg ]
         then
-            < topo-${CRS}-${i}.json topo2geo -n tracts=- | \
+            < output/topo-${CRS}-${i}.json topo2geo -n tracts=- | \
                 ndjson-map -r d3=d3 '(d.properties.scale='"${SCALE}"',d)' | \
                 ndjson-map -r d3=d3-scale-chromatic '(d.properties.fill='"${FILL}"', d)' | \
                 geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > output/topo-${CRS}-${i}.svg #| \
@@ -55,7 +57,7 @@ for CRS in ABD ADV ASI BAN BBN BDI BDM BFR BHI BHM BIC BKG BMH BMO BMS BNG BON B
 do
     for i in PT_AM PT_Mid PT_PM PT_Late 
     do
-	      ln output/topo-${CRS}-${i}.svg `ls output/topo-${CRS}-${i}.svg | sed 's/_AM/_01/;s/_Mid/_02/;s/_PM/_03/;s/_Late/_04/'`
+	ln output/topo-${CRS}-${i}.svg $(ls output/topo-${CRS}-${i}.svg | sed 's/_AM/_01/;s/_Mid/_02/;s/_PM/_03/;s/_Late/_04/')
     done
 done
 

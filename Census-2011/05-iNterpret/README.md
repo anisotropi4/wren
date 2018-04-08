@@ -11,10 +11,10 @@ $ cp ../04-Model/output/gb-census-report-density.ndjson .
 $ cp ../04-Model/output/PostalSector-simple-conic.ndjson .
 ```
 
-  Plus the 'ndjson-cli' module is installed
+  Plus the 'd3' and 'ndjson-cli' module is installed
 
 ```
-$ npm install ndjson-cli
+$ npm install d3 ndjson-cli
 ```
   
 ## Setup population density data  
