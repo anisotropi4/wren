@@ -152,8 +152,12 @@ Extract longitude and latitude and key attributes such as "AtcoCode", "Common Na
 ### Visualise data
 
 Running a local webserver and browsing the the corresponding localhost and po
-rt renders the NaPTAN data. Running the following in the 'Model and iNterpret' directory creates a webserver on port 8080
+rt renders the NaPTAN data. Running the following in the 'Model and iNterpret' directory creates a webserver on port 8080 
 
-    $ python -m SimpleHTTPServer 8080&
+    $ python -m http.server 8080 &
+
+The equivalent Python 2.x command is:
+
+    $ python -m SimpleHTTPServer 8080 &
 
 Browsing to "http://localhost:8080/" uses the "index.html" file to render the data in the form of an interactive map based on the OpenStreetMap Leaflet and d3 javascript frameworks. Clicking on circles provides a view of additional attributes
