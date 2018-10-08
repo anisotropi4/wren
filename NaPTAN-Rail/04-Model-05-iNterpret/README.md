@@ -12,8 +12,10 @@ The Model and iNterpret activities assume
 
   * A copy of TSV (tab-separated variable) file 'tree-dump.tsv' '02-Scrub-03-Explore' directory
 
-  * A copy of the new-line delimited JSON file 'StopPoint.ndjson' from the '02-Scrub-03-Explore/output' directory
+  * A copy of the new-line delimited JSON file 'StopPoint.ndjson' and 'StopArea.ndjson' from the '02-Scrub-03-Explore/output' or equivalent directory
 
+  * `unip` script from the goldfinch repository `bin` directory (https://github.com/anisotropi4/goldfinch)
+  
 ## Model the Data Structure
 
 ### Look for elements associated with 'Rail'
