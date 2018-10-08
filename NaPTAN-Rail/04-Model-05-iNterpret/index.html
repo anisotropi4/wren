@@ -29,6 +29,7 @@
          var active = {};
 
          var colours15 = {0: "GreenYellow", 13: "DeepSkyBlue", 3: "Gold", 5: "Red", 4: "Purple", 6: "Orange", 7: "DeepPink", 8: "Magenta", 9: "DarkSlateBlue", 10: "GreenYellow", 11: "Lime", 12: "Cyan", 1: "Blue", 14: "DarkBlue", 15: "DarkOrange", 16: "DarkOrchid"};
+         var AreaLookup = {"900": "Coach Stop", "910": "Rail Station", "920": "Airport", "930": "Ferry Terminal", "940": "Metro Station"};
          var colourscale = function(n) {
              return colours15[n];
          }
@@ -48,31 +49,42 @@
              if (err)
                  return console.warn(err);
              var a = [];
-             for (var i = 1; i <= d.length; i++) {
+             for (var i = 1; i <= d.length; i++)
                  a.push(Math.ceil(Math.log(i)/log2));
-             }
              a = d3.shuffle(a);
              arange = [mapply(a, Math.min), mapply(a, Math.max)];
              var ascale = d3.scaleLinear().domain([arange[0], arange[1]]).range([maxZoom+4, minZoom+2]);
+
              d.forEach(function(v, i) {
-                 v.type = "naptandata";                 
+                 var w = {};
+                 w.type = "naptandata";
+                 if (v.StopAreaCode)
+                     v.stoptype = AreaLookup[v.StopAreaCode.substring(0,3)];
+                 if (! v.stoptype)
+                     v.stoptype = 'Area';
                  if (! (v.stoptype in ncolours)) ncolours[v.stoptype] = Object.keys(ncolours).length;
-                 v.title = v["AtcoCode"];
-                 v.title2 = v["CommonName"];
-                 v.indicator = v["Indicator"];
-                 v.street = v["Street"];
-                 v.colour = colourscale(ncolours[v.stoptype]);
-                 v.LatLng = new L.LatLng(v.lat,v.lon);
-                 v.lrange = ascale(a[i]);
+                 w.stoptype = v.stoptype;
+                 if ("TIPLOC" in v) {
+                     w.title = v.TIPLOC
+                 } else {
+                     w.title = v.AtcoCode;
+                 }
+                 w.title2 = v.Name;
+                 w.indicator = v["Indicator"];
+                 w.street = v["Street"];
+                 w.colour = colourscale(ncolours[v.stoptype]);
+                 w.LatLng = new L.LatLng(v.lat,v.lon);
+                 w.lrange = ascale(a[i]);
+                 collections.push(w);
              });
-             collections = collections.concat(d);
+             //collections = collections.concat(d);
              render();
          });
          function render() {
              var tree = d3.quadtree().x(function(d) {
-                 return d.lat;
+                 return d.LatLng.lat;
              }).y(function(d) {
-                 return d.lon;
+                 return d.LatLng.lng;
              }).addAll(collections);
              var zscale = d3.scaleLinear().domain([minZoom, maxZoom]).range([arange[1], arange[0]]);
 
@@ -84,8 +96,8 @@
                  var p0 = bounds._southWest
                    , p3 = bounds._northEast;
                  tree.visit(function(node, x1, y1, x2, y2) {
-                     if (node.data &&  node.data.lrange >= zscale(map.getZoom())) nodes.push(node.data);
-                     return x1 >= p3.lat || y1 >= p3.lon || x2 < p0.lat || y2 < p0.lon;
+                     if (node.data && node.data.lrange >= zscale(map.getZoom())) nodes.push(node.data);
+                     return x1 >= p3.lat || y1 >= p3.lng || x2 < p0.lat || y2 < p0.lng;
                  });
                  console.log("# nodes selected", nodes.length);
                  return nodes;
@@ -134,13 +146,13 @@
                  var key = (d.x + "-" + d.y + "-" + i);
                  if (key in active) return clearRectangle(key);
                  node.style("fill", "white");
-                 output.push("Atco: " + d.title);
+                 output.push("TIPLOC: " + d.title);
                  if (d.title) output.push("Title: " + d.title2);
                  if (d.node) output.push("Node: " + d.node);
                  if (d.indicator) output.push("Indicator: " + d.indicator);
                  if (d.street) output.push("Street: " + d.street);
                  if (d.stoptype) output.push("type: " + d.stoptype);
-                 output.push("[" + parseFloat(d.lat).toFixed(5) + "," + parseFloat(d.lon).toFixed(5) + "]");
+                 output.push("[" + parseFloat(d.LatLng.lat).toFixed(5) + "," + parseFloat(d.LatLng.lng).toFixed(5) + "]");
                  //output.push("range: " + parseFloat(d.lrange).toFixed(1));
                  if (d.type) output.push("Source: " + d.type);
                  svg.insert("rect")

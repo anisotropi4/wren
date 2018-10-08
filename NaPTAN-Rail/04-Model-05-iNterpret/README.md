@@ -144,10 +144,56 @@ Selecting an element with a StopType "RLY"
     ...
     }
 
-Extract longitude and latitude and key attributes such as "AtcoCode", "Common Name" into a ndjson file and convert to json:
+Extract longitude and latitude and key attributes such as "AtcoCode", "Common Name" (as "Name") into a ndjson file and convert to json for National Points:
 
-    $ < StopPoint.ndjson jq -c '{AtcoCode} + (.Descriptor | {CommonName, Street, Indicator} ) + (.Place.Location.Translation | {lat: .Latitude, lon: .Longitude}) + (.Place | {node: .NptgLocalityRef}) + (.StopClassification | {stoptype: .StopType}) | del(.[] | select(. == null))' > naptandata.ndjson
-    $ < naptandata.ndjson jq -s -r '.' > naptandata.json
+    $ < StopPoint.ndjson jq -c '{AtcoCode} + (.Descriptor | ({Name: .CommonName} + {Street, Indicator})) + (.Place.Location.Translation | {lat: (.Latitude | (tonumber * 1E5) + 0.5 |  floor / 1E5), lon: (.Longitude | (tonumber * 1E5) + 0.5 |  floor / 1E5)}) + (.Place | {node: .NptgLocalityRef}) + (.StopClassification | {stoptype: .StopType}) | del(.[] | select(. == null))' > naptandata.ndjson
+
+Extract longitude and latitude and key attributes such as "StopAreaCode", "Name" into a ndjson file and convert to json for National Areas and append to the data file:
+
+    $ < StopArea.ndjson jq -c '(.Location.Translation | {lat: (.Latitude | (tonumber  * 1E5) + 0.5 | floor / 1E5), lon: (.Longitude | (tonumber * 1E5) + 0.5 | floor / 1E5)}) as $location | del(.Status, .RevisionNumber, .ModificationDateTime, .CreationDateTime, .Modification, .StopAreaType, .ParentStopAreaRef, .Location) as $output | $output + $location' >> naptandata.ndjson
+
+Aggregate the results for visualisation:
+
+    $ < naptandata.ndjson jq -sc '.' > naptandata-full.json
+
+### Identify National Point of Interest
+
+The [NaPTAN reference][http://naptan.dft.gov.uk/naptan/] the [NaPTAN Schema Guide][http://naptan.dft.gov.uk/naptan/schema/2.5/doc/NaPTANSchemaGuide-2.5-v0.67.pdf], sets out a number of characteristics of values with national scope:
+
+In section "3.5 Populating the NaPTAN Database" notes that "Certain types of stops...are issued centrally by special administrative areas with a national scope... also have AtcoCode values beginning with ‘9nn’"
+
+Then based on "Table 6-1 - Allowed Values for StopType" in section "6.7 StopClassification Element", 
+
+| Code | Type           |
+|------|----------------|
+| 900  | Coach Stop     |
+| 910  | Rail Station   |
+| 920  | Airport        |
+| 930  | Ferry Terminal |
+| 940  | Metro Station  |
+
+The list of codes with national scope match:
+
+    $ jq -r '.StopAreaCode[:3] // .AtcoCode[:3] | select(.[0:1] == "9")' StopArea.ndjson StopPoint.ndjson | sort -u > national-codes.txt
+    $ cat national-codes.txt
+    900
+    910
+    920
+    930
+    940
+
+Then from "3.5.2 Allocating an AtcoCode for a NaPTAN Stop Point" in section 3 "Rail Station Entrances", the TIPLOC code XXXXXXX is embedded in the AtcoAreaCode "AAA0XXXXXXXn".
+
+Extracting TIPLOC from the "AtcoCode" and "StopAreaCode" then gives:
+
+    $ < StopPoint.ndjson jq -c '(if .AtcoCode[0:1] == "9" then {TIPLOC: .AtcoCode[4:]} else {} end) + {AtcoCode} + (.Descriptor | ({Name: .CommonName} + {Street, Indicator})) + (.Place.Location.Translation | {lat: (.Latitude | (tonumber * 1E5) + 0.5 |  floor / 1E5), lon: (.Longitude | (tonumber * 1E5) + 0.5 |  floor / 1E5)}) + (.Place | {node: .NptgLocalityRef}) + (.StopClassification | {stoptype: .StopType}) | del(.[] | select(. == null))' > naptandata.ndjson
+    $ < StopArea.ndjson jq -c '(.Location.Translation | {lat: (.Latitude | (tonumber  * 1E5) + 0.5 | floor / 1E5), lon: (.Longitude | (tonumber * 1E5) + 0.5 | floor / 1E5)}) as $location | (if (.StopAreaCode[0:1] == "9") then {TIPLOC: .StopAreaCode[4:]} else {} end) as $TIPLOC | del(.Status, .RevisionNumber, .ModificationDateTime, .CreationDateTime, .Modification, .StopAreaType, .ParentStopAreaRef, .Location) as $output | $TIPLOC + $output + $location + $parent + $parenttiploc' >> naptandata.ndjson
+    
+Aggregate the TIPLOC results for visualisation:
+
+    $ < naptandata.ndjson jq -rc 'select(.TIPLOC)'| jq -sc '.' > naptandata.json
+
+(The "run.sh" script also extracts "ParentStopAreaRef" and "ParentTIPLOC" data)
 
 ### Visualise data
 
@@ -160,4 +206,5 @@ The equivalent Python 2.x command is:
 
     $ python -m SimpleHTTPServer 8080 &
 
-Browsing to "http://localhost:8080/" uses the "index.html" file to render the data in the form of an interactive map based on the OpenStreetMap Leaflet and d3 javascript frameworks. Clicking on circles provides a view of additional attributes
+Browsing to "http://localhost:8080/index.html" uses the "index.html" file to render the data in the form of an interactive map based on the OpenStreetMap Leaflet and d3 javascript frameworks. Clicking on circles provides a view of additional attributes
+
