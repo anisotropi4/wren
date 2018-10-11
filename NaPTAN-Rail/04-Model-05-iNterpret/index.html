@@ -2,9 +2,9 @@
 <html>
     <head>
         <title>d3.js with OSM leaflet.js rendering NaPTAN points-of-interest</title>
-        <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.3/dist/leaflet.css">
+        <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.3.1/dist/leaflet.css">
         <script src="https://npmcdn.com/leaflet@1.3.1/dist/leaflet.js"></script>
-        <script src="http://d3js.org/d3.v4.min.js"></script>
+        <script src="http://d3js.org/d3.v5.min.js"></script>
     </head>
     <body>
         <div id="map" style="width: 1340px; height: 635px"></div>
@@ -34,26 +34,16 @@
              return colours15[n];
          }
          var ncolours = {};
-         // mapply works for big data sets while Math.{min,max}.apply() fails
-         function mapply(a, fn) {
-             var m = a[0];
-             for (i=1; i < a.length; i++) {
-                 if (fn(a[i], m) != m) {
-                     m = a[i];
-                 }
-             }
-             return m;
-         }
          var arange;
-         d3.json("naptandata.json", function(err, d) {
-             if (err)
-                 return console.warn(err);
+
+         d3.json("naptandata.json").then(function(d) {
              var a = [];
              for (var i = 1; i <= d.length; i++)
                  a.push(Math.ceil(Math.log(i)/log2));
+
+             arange = [a[0], a[a.length -1]];
+             var ascale = d3.scaleLinear().domain([arange[0], arange[1]]).range([maxZoom-3, minZoom+6]);
              a = d3.shuffle(a);
-             arange = [mapply(a, Math.min), mapply(a, Math.max)];
-             var ascale = d3.scaleLinear().domain([arange[0], arange[1]]).range([maxZoom+4, minZoom+2]);
 
              d.forEach(function(v, i) {
                  var w = {};
@@ -64,12 +54,15 @@
                      v.stoptype = 'Area';
                  if (! (v.stoptype in ncolours)) ncolours[v.stoptype] = Object.keys(ncolours).length;
                  w.stoptype = v.stoptype;
-                 if ("TIPLOC" in v) {
+                 w.title = v.AtcoCode;
+                 if ("TIPLOC" in v) 
                      w.title = v.TIPLOC
-                 } else {
-                     w.title = v.AtcoCode;
-                 }
                  w.title2 = v.Name;
+                 if ("ParentTIPLOC" in v) {
+                     w.title = v.ParentTIPLOC;
+                     w.title2 = v.TIPLOC;
+                     w.title3 = v.Name;
+                 }
                  w.indicator = v["Indicator"];
                  w.street = v["Street"];
                  w.colour = colourscale(ncolours[v.stoptype]);
@@ -77,7 +70,6 @@
                  w.lrange = ascale(a[i]);
                  collections.push(w);
              });
-             //collections = collections.concat(d);
              render();
          });
          function render() {
@@ -107,8 +99,7 @@
              update();
              function update() {
                  g.selectAll("circle").remove();
-                 g.selectAll("text").remove();
-                 g.selectAll("rect").remove();
+                 clearRectangle();
                  var nodes = visiblenodes()
                      , i = 0;
                  var feature = g.attr("pointer-events", "visible")
@@ -129,31 +120,30 @@
                                     return "translate(" + d.x + "," + d.y + ")";
                                 });
              }
-             svg.attr("pointer-events", "visible").on("click",clearRectangles);
-             function clearRectangles() {
-                 Object.keys(active).forEach(clearRectangle);
-             }
-             function clearRectangle(key) {
-                 active[key].style("fill", function(d, i) { return d.colour; });
-                 d3.select("#r"+key).remove();
-                 d3.select("#t"+key).remove();
-                 delete(active[key]);
+             svg.attr("pointer-events", "visible").on("click",clearRectangle);
+             function clearRectangle() {
+                 for (var key in active) {
+                     active[key].style("fill", function(d, i) { return d.colour; });
+                     d3.select("#r"+key).remove();
+                     d3.select("#t"+key).remove();
+                     delete(active[key]);
+                 }
              }
              function handleMouseClick(d, i) {
                  d3.event.stopPropagation();
                  var node = d3.select(this);
                  var output = [];
                  var key = (d.x + "-" + d.y + "-" + i);
-                 if (key in active) return clearRectangle(key);
-                 node.style("fill", "white");
+                 clearRectangle();
+                 //node.style("fill", "white");
                  output.push("TIPLOC: " + d.title);
-                 if (d.title) output.push("Title: " + d.title2);
+                 if (d.title2) output.push(d.title2);
+                 if (d.title3) output.push(d.title3);
                  if (d.node) output.push("Node: " + d.node);
                  if (d.indicator) output.push("Indicator: " + d.indicator);
-                 if (d.street) output.push("Street: " + d.street);
-                 if (d.stoptype) output.push("type: " + d.stoptype);
+                 if (d.street && d.street != "-") output.push("Street: " + d.street);
+                 if (d.stoptype) output.push("Type: " + d.stoptype);
                  output.push("[" + parseFloat(d.LatLng.lat).toFixed(5) + "," + parseFloat(d.LatLng.lng).toFixed(5) + "]");
-                 //output.push("range: " + parseFloat(d.lrange).toFixed(1));
                  if (d.type) output.push("Source: " + d.type);
                  svg.insert("rect")
                     .attr("id", "r" + key)
