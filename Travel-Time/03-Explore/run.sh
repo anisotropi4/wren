@@ -36,7 +36,7 @@ do
                                                       geoproject "${PROJECTION}" | \
                                                       jq -c '.features[]') \
                                              <(jq -c 'select(.CRS=="'${CRS}'") | del(.CRS) | to_entries | map({id: .key, time: (.value | tonumber | . + 0.5 | floor)})[]' Stations_${i}.ndjson) | \
-                                        ndjson-map -r d3=d3 '{type: d[0].type, properties: {title: d[0].id, time: (d[1] != null && d[1].time || 999.9)}, geometry: d[0].geometry}') | \
+                                        ndjson-map '{type: d[0].type, properties: {title: d[0].id, time: (d[1] != null && d[1].time || 999.9)}, geometry: d[0].geometry}') | \
                 toposimplify -p 1 -f | \
                 topoquantize 1E6 > output/topo-${CRS}-${i}.json
         fi
@@ -44,10 +44,9 @@ do
         if [ ! -s output/topo-${CRS}-${i}.svg ]
         then
             < output/topo-${CRS}-${i}.json topo2geo -n tracts=- | \
-                ndjson-map -r d3=d3 '(d.properties.scale='"${SCALE}"',d)' | \
+                ndjson-map -r d3 '(d.properties.scale='"${SCALE}"',d)' | \
                 ndjson-map -r d3=d3-scale-chromatic '(d.properties.fill='"${FILL}"', d)' | \
-                geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > output/topo-${CRS}-${i}.svg #| \
-            #sed '$d'             
+                geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > output/topo-${CRS}-${i}.svg 
         fi
     done
 done
