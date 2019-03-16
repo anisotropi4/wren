@@ -22,9 +22,9 @@
         display: none;
         position: fixed;
         z-index: 1;
-        left: 0%;
         top: 0%;
-        width: 100%;
+        max-width: 100%;
+        max-height: 100%;
         overflow: auto;
         background-color: white;
     }
@@ -34,8 +34,9 @@
         display: block;
         color: black;
         font-size: 20px;
-        top: 5%;
-        left: 10%;
+        top: 20px;
+        left: 5px;
+        width: 94%;
         font-family: Arial, Helvetica, sans-serif;
     }
 
@@ -43,16 +44,16 @@
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width: 60%;
-        max-width: 767px;
-        transform: translate(0%, -10%);
+        max-width: auto;
+        width: auto;
+        overflow: auto;
     }
 
     .close {
         position: absolute;
         z-index: 5;
+        right: 0%;
         top: 5px;
-        right: 15%;
         color: black;
         font-size: 40px;
         font-weight: bold;
@@ -67,7 +68,6 @@
       <img class="modal-content" id="image">
       <div id="caption"></div>
     </div>
-
 
     <table>
       <thead><tr>
@@ -1368,17 +1368,18 @@
      var captionText = document.getElementById("caption");
 
      function openModal(this_image) {
-                document.getElementById('thisModal').style.display = "block";
-                console.log(this_image);
-                modal.style.display = "block";
-                modalImage.src = this_image.src;
-                captionText.innerHTML = this_image.alt;
-                markdown.style.overflow = "hidden";
+         modal.style.display = "block";
+         modal.style.left = 445;
+         modalImage.src = this_image.src;
+         captionText.innerHTML = this_image.alt;
+         modalImage.height = window.innerHeight;
+         console.log(this_image);
+         console.log(window.innerHeight);
      }
      var span = document.getElementsByClassName("close")[0];
      span.onclick = function() {
-                modal.style.display = "none";
-                markdown.style.overflow = "auto";
+         modal.style.display = "none";
+         markdown.style.overflow = "auto";
      }
    </script>
 </html>
