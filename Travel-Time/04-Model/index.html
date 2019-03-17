@@ -11,48 +11,49 @@
         max-width: 980px;
         margin: 0 auto;
     }
-
+    .markdown-body table td {
+        background-color: white;
+    }
     @media (max-width: 767px) {
         .markdown-body {
              padding: 0px;
         }
     }
-
     .modal {
         display: none;
         position: fixed;
-        z-index: 1;
+        z-index: 2;
         top: 0%;
         max-width: 100%;
         max-height: 100%;
         overflow: auto;
-        background-color: white;
+        background-color: inherit;
     }
-
     #caption {
         position: absolute;
         display: block;
         color: black;
         font-size: 20px;
         top: 20px;
-        left: 5px;
-        width: 94%;
+        left: 10px;
+        width: 90%;
         font-family: Arial, Helvetica, sans-serif;
+        background-color: inherit;
     }
-
     .modal-content {
         display: block;
+        z-index: 1;
         margin-left: auto;
         margin-right: auto;
         max-width: auto;
         width: auto;
         overflow: auto;
+        background-color: inherit;
     }
-
     .close {
         position: absolute;
         z-index: 5;
-        right: 0%;
+        right: 10px;
         top: 5px;
         color: black;
         font-size: 40px;
@@ -1369,12 +1370,10 @@
 
      function openModal(this_image) {
          modal.style.display = "block";
-         modal.style.left = 445;
          modalImage.src = this_image.src;
          captionText.innerHTML = this_image.alt;
          modalImage.height = window.innerHeight;
-         console.log(this_image);
-         console.log(window.innerHeight);
+         modal.style.left = (window.innerWidth - modal.clientWidth) / 2 - markdown.offsetTop;
      }
      var span = document.getElementsByClassName("close")[0];
      span.onclick = function() {
