@@ -29,39 +29,41 @@ if [ ! -f output.mp4 ]; then
 fi
 
 if [ ! -f output.html ]; then
-   # create output.html file based 
-   scrape -e 'article' head.html | sed 's/[\t ][\t ]*$//' > 02-head-article.html
-   grep -Fwvxf head-article.html head.html > 01-head-main.html
-
-   sed -i '/^\s*$/d' 01-head-main.html
-   tail -1 01-head-main.html > 06-head-main.html
-   sed -i '$d' 01-head-main.html
-
-   tail -1 02-head-article.html > 05-head-article.html
-   sed -i '$d' 02-head-article.html
-
-   ./travel-time-01.py > body.yaml
-   output-html.py --yaml body.yaml body.html
-   scrape -e table body.html | sed 's/[\t ][\t ]*$//' > 03-body-table.html
-
-   cat 01-head-main.html 02-head-article.html 03-body-table.html 04-end-main.html 05-head-article.html 06-head-main.html > output.html
+    # create output.html file based
+    output-html.py --yaml head.yaml head.html
+    scrape -e 'article' head.html | sed 's/[\t ][\t ]*$//' > 02-head-article.html
+    grep -Fwvxf head-article.html head.html > 01-head-main.html
+   
+    sed -i '/^\s*$/d' 01-head-main.html
+    tail -1 01-head-main.html > 06-head-main.html
+    sed -i '$d' 01-head-main.html
+    
+    tail -1 02-head-article.html > 05-head-article.html
+    sed -i '$d' 02-head-article.html
+    
+    ./travel-time-01.py > body.yaml
+    output-html.py --yaml body.yaml body.html
+    scrape -e table body.html | sed 's/[\t ][\t ]*$//' > 03-body-table.html
+    
+    cat 01-head-main.html 02-head-article.html 03-body-table.html 04-end-main.html 05-head-article.html 06-head-main.html > output.html
 fi
 
 if [ ! -f new.html ]; then
-   # create output.html file based 
-   scrape -e 'article' head.html | sed 's/[\t ][\t ]*$//' > 02-head-article.html
-   grep -Fwvxf head-article.html head.html > 01-head-main.html
-
-   sed -i '/^\s*$/d' 01-head-main.html
-   tail -1 01-head-main.html > 06-head-main.html
-   sed -i '$d' 01-head-main.html
-
-   tail -1 02-head-article.html > 05-head-article.html
-   sed -i '$d' 02-head-article.html
-
-   ./travel-time-02.py > body.yaml
-   output-html.py --yaml body.yaml body.html
-   scrape -e table body.html | sed 's/[\t ][\t ]*$//' > 03-body-table.html
-
-   cat 01-head-main.html 02-head-article.html 03-body-table.html 04-end-main.html 05-head-article.html 06-head-main.html > new.html
+    # create output.html file based
+    output-html.py --yaml head.yaml head.html
+    scrape -e 'article' head.html | sed 's/[\t ][\t ]*$//' > 02-head-article.html
+    grep -Fwvxf head-article.html head.html > 01-head-main.html
+    
+    sed -i '/^\s*$/d' 01-head-main.html
+    tail -1 01-head-main.html > 06-head-main.html
+    sed -i '$d' 01-head-main.html
+    
+    tail -1 02-head-article.html > 05-head-article.html
+    sed -i '$d' 02-head-article.html
+    
+    ./travel-time-02.py > body.yaml
+    output-html.py --yaml body.yaml body.html
+    scrape -e table body.html | sed 's/[\t ][\t ]*$//' > 03-body-table.html
+    
+    cat 01-head-main.html 02-head-article.html 03-body-table.html 04-end-main.html 05-head-article.html 06-head-main.html > new.html
 fi
