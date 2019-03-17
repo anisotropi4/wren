@@ -1,16 +1,18 @@
 #!/bin/bash -x
 # Train travel-time data for Public Transport links for all stations
 
-HEIGHT=960
+HEIGHT=800
 WIDTH=640
 
 PROJECTION='d3.geoConicEqualArea().parallels([49, 61]).fitSize(['${WIDTH}','${HEIGHT}'], d)'
 
 TIMESTEP=30.0
-SCALE="d3.scaleLinear().domain([450, 0]).clamp(true)(d3.format('.0f')(d.properties.time / "${TIMESTEP}") * "${TIMESTEP}")"
+SCALE_HW="d3.scaleLinear().domain([750, 0]).clamp(true)(d3.format('.0f')(d.properties.time / "${TIMESTEP}") * "${TIMESTEP}")"
+SCALE_PT="d3.scaleLinear().domain([420, 0]).clamp(true)(d3.format('.0f')(d.properties.time / "${TIMESTEP}") * "${TIMESTEP}")"
 
 #FILL="d3.interpolateYlOrRd(d.properties.scale)"
-FILL="d3.interpolatePlasma(d.properties.scale)"
+#FILL="d3.interpolatePlasma(d.properties.scale)"
+FILL="d3.interpolateViridis(d.properties.scale)"
 #FILL="d3.schemeSpectral[11][d.properties.scale]"
 
         
@@ -40,13 +42,21 @@ do
                 toposimplify -p 1 -f | \
                 topoquantize 1E6 > output/topo-${CRS}-${i}.json
         fi
-        
+
+	TYPE=${i:0:2}
         if [ ! -s output/topo-${CRS}-${i}.svg ]
         then
-            < output/topo-${CRS}-${i}.json topo2geo -n tracts=- | \
-                ndjson-map -r d3 '(d.properties.scale='"${SCALE}"',d)' | \
-                ndjson-map -r d3=d3-scale-chromatic '(d.properties.fill='"${FILL}"', d)' | \
-                geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > output/topo-${CRS}-${i}.svg 
+	    if [ ${i:0:2} == "PT" ]; then
+		< output/topo-${CRS}-${i}.json topo2geo -n tracts=- | \
+                    ndjson-map -r d3 '(d.properties.scale='"${SCALE_PT}"',d)' | \
+                    ndjson-map -r d3=d3-scale-chromatic '(d.properties.fill='"${FILL}"', d)' | \
+                    geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > output/topo-${CRS}-${i}.svg
+	    else
+		< output/topo-${CRS}-${i}.json topo2geo -n tracts=- | \
+                    ndjson-map -r d3 '(d.properties.scale='"${SCALE_HW}"',d)' | \
+                    ndjson-map -r d3=d3-scale-chromatic '(d.properties.fill='"${FILL}"', d)' | \
+                    geo2svg --stroke=none -n -p 1 -w ${WIDTH} -h ${HEIGHT} > output/topo-${CRS}-${i}.svg
+	    fi
         fi
     done
 done

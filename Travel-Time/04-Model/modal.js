@@ -9,6 +9,14 @@ for(var i = 0; i < images.length; i++) {
     var this_tag = thisID.split('-').pop();
     nList[this_tag] = 1;
 }
+var z = Object.keys(nList).length;
+var theseColumns = document.getElementsByClassName("column");
+for(i=0; i < theseColumns.length; i++) {
+    theseColumns[i].style.width = 0;
+    if( i < z) {
+	theseColumns[i].style.width = 100 / z + "%";
+    }
+}
 
 var markdown = document.getElementsByTagName('article')[0];
 var modal = document.getElementById('Modal');
@@ -27,6 +35,7 @@ function openModal(thisID) {
     captionText.innerHTML = thisImage.alt;
     modalImage.height = window.innerHeight;
     modal.style.left = (window.innerWidth - modal.clientWidth) / 2 - markdown.offsetTop;
+    var z = Object.keys(nList).length;
     var thisCRS = thisImage.id.split('-').shift();
     for(var n in nList) {
 	var thisImageID = thisCRS + "-" + n;
