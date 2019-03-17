@@ -19,79 +19,11 @@
              padding: 0px;
         }
     }
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 2;
-        top: 0%;
-        max-width: 100%;
-        max-height: 100%;
-        overflow: auto;
-        background-color: inherit;
-    }
-    #caption {
-        position: absolute;
-        display: block;
-        color: black;
-        font-size: 20px;
-        top: 20px;
-        left: 10px;
-        width: 90%;
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: inherit;
-    }
-    
-    .thumbnails {
-       position: absolute;
-       bottom: 10px;
-       background-color: inherit;
-    }
-    .column {
-       float: left;
-       width: 25%;
-       background-color: inherit;
-    }
-    .thumbnail {
-       display: block;
-       width: 50%;
-       margin-left: auto;
-       margin-right: auto;
-    }
-    .modal-content {
-        display: block;
-        z-index: 1;
-        margin-left: auto;
-        margin-right: auto;
-        max-width: auto;
-        width: auto;
-        overflow: auto;
-        background-color: inherit;
-    }
-    .close {
-        position: absolute;
-        z-index: 5;
-        right: 10px;
-        top: 5px;
-        color: black;
-        font-size: 40px;
-        font-weight: bold;
-    }
   </style>
-  <article id="thisBody" class="markdown-body">
+    <article id="thisBody" class="markdown-body">
     <h1>Combined Public Transport and Rail Travel Times</h1>
     <h1>UK Rail Travel Times Gallery</h1>
     <p>Visualisation based on Department of Transport combined Public Transport and Rail Travel-Time data. The project directory is <a href="https://github.com/anisotropi4/wren/tree/master/Travel-Time">here</a></p>
-    <div id="thisModal" class="modal">
-      <div id="caption"></div>
-      <span class="close">&times;</span>
-      <img class="modal-content" id="image">
-      <div id="theseThumbnails" class="thumbnails">
-	<div class="column"><img class="thumbnail" id="thumb-01"></div>
-	<div class="column"><img class="thumbnail" id="thumb-02"></div>
-	<div class="column"><img class="thumbnail" id="thumb-03"></div>
-	<div class="column"><img class="thumbnail" id="thumb-04"></div>	
-      </div>
-    </div>
     <table>
       <thead><tr>
 	  <th style="text-align:center">Station Name<br>CRS Code</th>
@@ -111,10 +43,10 @@
 	</tr>
 	<tr>
 	  <td style="text-align:center">Andover<br>ADV</td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ADV-PT_01.png" alt="ADV, Andover, Public Transport, Early"></td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ADV-PT_02.png" alt="ADV, Andover, Public Transport, Midday"></td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ADV-PT_03.png" alt="ADV, Andover, Public Transport, Evening"></td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ADV-PT_04.png" alt="ADV, Andover, Public Transport, Late"></td>
+	  <td style="text-align:center"><img src="images/topo-ADV-PT_01.png" alt="ADV, Andover, Public Transport, Early"></td>
+	  <td style="text-align:center"><img src="images/topo-ADV-PT_02.png" alt="ADV, Andover, Public Transport, Midday"></td>
+	  <td style="text-align:center"><img src="images/topo-ADV-PT_03.png" alt="ADV, Andover, Public Transport, Evening"></td>
+	  <td style="text-align:center"><img src="images/topo-ADV-PT_04.png" alt="ADV, Andover, Public Transport, Late"></td>
 	</tr>
 	<tr>
 	  <td style="text-align:center">Ashford International<br>ASI</td>
@@ -1384,39 +1316,19 @@
 	</tr>
       </tbody>
     </table>
-   <script>
-     var markdown = document.getElementById('thisBody');
-     var modal = document.getElementById('thisModal');
-     var modalImage = document.getElementById('image');
-     var captionText = document.getElementById('caption');
-
-     function makeThumbnailClosure(thisID) {
-         return function() {
-             openModal(thisID);
-         };
-     }
-     function openModal(thisID) {
-         var thisImage = document.getElementById(thisID);
-         modal.style.display = "block";
-         modalImage.src = thisImage.src;
-         captionText.innerHTML = thisImage.alt;
-         modalImage.height = window.innerHeight;
-         modal.style.left = (window.innerWidth - modal.clientWidth) / 2 - markdown.offsetTop;
-         var thisCRS = thisImage.id.split('_')[0];
-         var nList = ["01", "02", "03", "04"];
-         for(var i = 0; i < nList.length; i++) {
-	    var n = nList[i];
-	    var thisImageID = thisCRS + "_" + n;
-            var thumbnail = document.getElementById('thumb-' + n);
-	    thumbnail.src = "images/topo-" + thisImageID + ".png";
-	    thumbnail.onclick = makeThumbnailClosure(thisImageID);
-	    thumbnail.alt = "thumbnail: " + document.getElementById(thisImageID).alt;
-        };
-     }
-     var span = document.getElementsByClassName("close")[0];
-     span.onclick = function() {
-         modal.style.display = "none";
-         markdown.style.overflow = "auto";
-     }
-   </script>
+    <link rel="stylesheet" href="travel-time.css">
+    <div id="Modal" class="modal">
+      <div id="caption"></div>
+      <span class="close">&times;</span>
+      <img class="modal-content" id="image">
+      <div id="theseThumbnails" class="thumbnails">
+	<div class="column"><img class="thumbnail" id="thumb-01"></div>
+	<div class="column"><img class="thumbnail" id="thumb-02"></div>
+	<div class="column"><img class="thumbnail" id="thumb-03"></div>
+	<div class="column"><img class="thumbnail" id="thumb-04"></div>	
+      </div>
+    </div>
+    <script src="modal.js"></script>
+</article>
 </html>
+
