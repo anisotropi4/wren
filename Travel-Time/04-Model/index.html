@@ -40,6 +40,23 @@
         font-family: Arial, Helvetica, sans-serif;
         background-color: inherit;
     }
+    
+    .thumbnails {
+       position: absolute;
+       bottom: 10px;
+       background-color: inherit;
+    }
+    .column {
+       float: left;
+       width: 25%;
+       background-color: inherit;
+    }
+    .thumbnail {
+       display: block;
+       width: 50%;
+       margin-left: auto;
+       margin-right: auto;
+    }
     .modal-content {
         display: block;
         z-index: 1;
@@ -65,11 +82,16 @@
     <h1>UK Rail Travel Times Gallery</h1>
     <p>Visualisation based on Department of Transport combined Public Transport and Rail Travel-Time data. The project directory is <a href="https://github.com/anisotropi4/wren/tree/master/Travel-Time">here</a></p>
     <div id="thisModal" class="modal">
+      <div id="caption"></div>
       <span class="close">&times;</span>
       <img class="modal-content" id="image">
-      <div id="caption"></div>
+      <div id="theseThumbnails" class="thumbnails">
+	<div class="column"><img class="thumbnail" id="thumb-01"></div>
+	<div class="column"><img class="thumbnail" id="thumb-02"></div>
+	<div class="column"><img class="thumbnail" id="thumb-03"></div>
+	<div class="column"><img class="thumbnail" id="thumb-04"></div>	
+      </div>
     </div>
-
     <table>
       <thead><tr>
 	  <th style="text-align:center">Station Name<br>CRS Code</th>
@@ -82,10 +104,10 @@
       <tbody>
 	<tr>
 	  <td style="text-align:center">Aberdeen<br>ABD</td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ABD-PT_01.png" alt="ABD, Aberdeen, Public Transport, Early"></td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ABD-PT_02.png" alt="ABD, Aberdeen, Public Transport, Midday"></td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ABD-PT_03.png" alt="ABD, Aberdeen, Public Transport, Evening"></td>
-	  <td style="text-align:center"><img onclick="openModal(this)" src="images/topo-ABD-PT_04.png" alt="ABD, Aberdeen, Public Transport, Late"></td>
+	  <td style="text-align:center"><img id="ABD-PT_01" onclick="openModal(id)" src="images/topo-ABD-PT_01.png" alt="ABD, Aberdeen, Public Transport, Early"></td>
+	  <td style="text-align:center"><img id="ABD-PT_02" onclick="openModal(id)" src="images/topo-ABD-PT_02.png" alt="ABD, Aberdeen, Public Transport, Midday"></td>
+	  <td style="text-align:center"><img id="ABD-PT_03" onclick="openModal(id)" src="images/topo-ABD-PT_03.png" alt="ABD, Aberdeen, Public Transport, Evening"></td>
+	  <td style="text-align:center"><img id="ABD-PT_04" onclick="openModal(id)" src="images/topo-ABD-PT_04.png" alt="ABD, Aberdeen, Public Transport, Late"></td>
 	</tr>
 	<tr>
 	  <td style="text-align:center">Andover<br>ADV</td>
@@ -1365,15 +1387,31 @@
    <script>
      var markdown = document.getElementById('thisBody');
      var modal = document.getElementById('thisModal');
-     var modalImage = document.getElementById("image");
-     var captionText = document.getElementById("caption");
+     var modalImage = document.getElementById('image');
+     var captionText = document.getElementById('caption');
 
-     function openModal(this_image) {
+     function makeThumbnailClosure(thisID) {
+         return function() {
+             openModal(thisID);
+         };
+     }
+     function openModal(thisID) {
+         var thisImage = document.getElementById(thisID);
          modal.style.display = "block";
-         modalImage.src = this_image.src;
-         captionText.innerHTML = this_image.alt;
+         modalImage.src = thisImage.src;
+         captionText.innerHTML = thisImage.alt;
          modalImage.height = window.innerHeight;
          modal.style.left = (window.innerWidth - modal.clientWidth) / 2 - markdown.offsetTop;
+         var thisCRS = thisImage.id.split('_')[0];
+         var nList = ["01", "02", "03", "04"];
+         for(var i = 0; i < nList.length; i++) {
+	    var n = nList[i];
+	    var thisImageID = thisCRS + "_" + n;
+            var thumbnail = document.getElementById('thumb-' + n);
+	    thumbnail.src = "images/topo-" + thisImageID + ".png";
+	    thumbnail.onclick = makeThumbnailClosure(thisImageID);
+	    thumbnail.alt = "thumbnail: " + document.getElementById(thisImageID).alt;
+        };
      }
      var span = document.getElementsByClassName("close")[0];
      span.onclick = function() {
