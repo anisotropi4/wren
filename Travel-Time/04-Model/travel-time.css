@@ -1,0 +1,58 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    top: 0%;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: auto;
+    background-color: inherit;
+}
+#caption {
+    position: absolute;
+    display: block;
+    color: black;
+    font-size: 20px;
+    top: 20px;
+    left: 10px;
+    width: 90%;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: inherit;
+}
+.thumbnails {
+    position: absolute;
+    bottom: 10px;
+    background-color: inherit;
+}
+.column {
+    float: left;
+    width: 33.0%;
+    background-color: inherit;
+}
+.thumbnail {
+    display: block;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.modal-content {
+    position: block;
+    z-index: 1;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: auto;
+    width: auto;
+    overflow: auto;
+    background-color: inherit;
+}
+.close {
+    position: absolute;
+    z-index: 5;
+    right: 10px;
+    top: 5px;
+    color: black;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+ 
