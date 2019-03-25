@@ -54,5 +54,9 @@
     font-size: 40px;
     font-weight: bold;
 }
-
- 
+.centre {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}

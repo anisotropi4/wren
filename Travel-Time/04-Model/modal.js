@@ -1,3 +1,9 @@
+function makeModalClosure(thisID) {
+    return function() {
+        openModal(thisID);
+    };
+}
+
 var images = document.getElementsByTagName('img');
 var nList = {};
 nList = [];
@@ -9,25 +15,36 @@ for(var i = 0; i < images.length; i++) {
     var this_tag = thisID.split('-').pop();
     nList[this_tag] = 1;
 }
+
+var markdown = document.getElementsByTagName('article')[0];
+var modalHTML  = document.createElement('div');
+modalHTML.innerHTML = '<div id="Modal" class="modal">\
+  <div id="caption"></div>\
+  <span class="close">&times;</span>\
+  <img class="modal-content" id="image">\
+  <div id="theseThumbnails" class="thumbnails">\
+    <div class="column"><img class="thumbnail" id="thumb-01"></div>\
+    <div class="column"><img class="thumbnail" id="thumb-02"></div>\
+    <div class="column"><img class="thumbnail" id="thumb-03"></div>\
+    <div class="column"><img class="thumbnail" id="thumb-04"></div>\
+  </div>\
+</div>';
+markdown.appendChild(modalHTML);
+
 var z = Object.keys(nList).length;
 var theseColumns = document.getElementsByClassName("column");
-for(i=0; i < theseColumns.length; i++) {
+for (i=0; i < theseColumns.length; i++) {
     theseColumns[i].style.width = 0;
-    if( i < z) {
-	theseColumns[i].style.width = 100 / z + "%";
+    if (i < z) {
+	    theseColumns[i].style.width = 100 / z + "%";
     }
 }
 
-var markdown = document.getElementsByTagName('article')[0];
+
 var modal = document.getElementById('Modal');
 var modalImage = document.getElementById('image');
 var captionText = document.getElementById('caption');
 
-function makeModalClosure(thisID) {
-    return function() {
-        openModal(thisID);
-    };
-}
 function openModal(thisID) {
     var thisImage = document.getElementById(thisID);
     modal.style.display = "block";
@@ -51,4 +68,3 @@ span.onclick = function() {
     modal.style.display = "none";
     markdown.style.overflow = "auto";
 }
-
