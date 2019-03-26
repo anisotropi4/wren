@@ -1,4 +1,7 @@
 title: Combined Public Transport and Rail Travel Times
+header: |
+ <link rel="stylesheet" href="tabbed.css">
+ <script src="tabbed.js"></script>
 body: |
  # Combined Public Transport and Rail Travel Times
  
