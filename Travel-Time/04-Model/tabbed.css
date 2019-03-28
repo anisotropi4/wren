@@ -1,0 +1,65 @@
+.body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0px;
+}
+
+.markdown-body {
+    padding: 0px !important;
+}
+
+.markdown-body table td {
+    background: white;
+}
+
+.modal-container {
+    display: none;
+    height: 100%;
+    width: 100%;
+    position: absolute;    
+    top: 0px;
+    left: 0px;
+    background: white;
+}
+
+.modal-container th {
+    position: relative;
+}
+
+#modal-caption {
+    font-size: 20px;
+    min-width: 560px;
+    text-align: left;
+}
+
+#modal-close {
+    float: right;
+    color: black;
+    font-weight: bold;
+}
+
+.modal-image * {
+    text-align: center;
+    background: white;
+}
+
+.modal-image div {
+    height: 82vh;
+    overflow: hidden;
+}
+
+.modal-image img {
+    height: 110vh;
+    margin: -14vh 0 0 0;
+}
+
+.thumbnail {
+    padding-top: 0px;
+    text-align: center;
+    height: 10vh;
+    overflow: hidden;
+}
+
+.thumbnail img {
+    height: 10vh;
+    margin: -1vh 0 0 0;
+}
