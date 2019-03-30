@@ -28,6 +28,13 @@ if [ ! -f output.mp4 ]; then
     ffmpeg -framerate 6 -pattern_type glob -i 'frames/*.png' -c:v libx264 -pix_fmt yuv420p output.mp4
 fi
 
+for i in HW PT
+do
+    if [ ! -f ${i}_legend.svg ]; then
+	ln ../03-Explore/${i}_legend.svg
+    fi
+done
+
 if [ ! -f output.html ]; then
     # create output.html file based
     output-html.py --yaml head.yaml head.html
