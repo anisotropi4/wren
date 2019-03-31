@@ -1,7 +1,7 @@
 #!/bin/bash -x
 # Train travel-time data for Public Transport links for all stations
 
-HEIGHT=800
+HEIGHT=960
 WIDTH=640
 
 PROJECTION='d3.geoConicEqualArea().parallels([49, 61]).fitSize(['${WIDTH}','${HEIGHT}'], d)'
@@ -66,7 +66,12 @@ for CRS in ABD ADV ASI BAN BBN BDI BDM BFR BHI BHM BIC BKG BMH BMO BMS BNG BON B
 do
     for i in PT_AM PT_Mid PT_PM PT_Late HW_AM HW_Mid HW_PM
     do
-	ln output/topo-${CRS}-${i}.svg $(ls output/topo-${CRS}-${i}.svg | sed 's/_AM/_01/;s/_Mid/_02/;s/_PM/_03/;s/_Late/_04/')
+	if [ ! -f $(ls output/topo-${CRS}-${i}.svg | sed 's/_AM/_01/;s/_Mid/_02/;s/_PM/_03/;s/_Late/_04/') ]; then
+	    ln output/topo-${CRS}-${i}.svg $(ls output/topo-${CRS}-${i}.svg | sed 's/_AM/_01/;s/_Mid/_02/;s/_PM/_03/;s/_Late/_04/')
+	fi
     done
 done
 
+if [ ! -f HW_legend.svg -o ! -f PT_legend.svg ]; then
+    node render.js
+fi
