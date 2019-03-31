@@ -15,7 +15,7 @@
     display: none;
     height: 100%;
     width: 100%;
-    position: absolute;    
+    position: absolute;
     top: 0px;
     left: 0px;
     background: white;
@@ -62,4 +62,10 @@
 .thumbnail img {
     height: 10vh;
     margin: -1vh 0 0 0;
+}
+
+#legendImage {
+    max-height: 50vh;
+    transform: translate(24vw, -92vh);
+    text-anchor: end;
 }
