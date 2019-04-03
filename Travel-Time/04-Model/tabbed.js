@@ -14,18 +14,18 @@ window.onload = function () {
 };
 
 function makeModalClosure(thisID) {
-    return function() {
-      openModal(thisID);
-    };
+  return function() {
+    openModal(thisID);
+  };
 }
 
 function makeThumbnailClosure(thisSource, thisText) {
-    return function() {
-      modalImage.src = thisSource;
-      thisImage.src = thisSource;
-      thisCaption.innerText = thisText;
-      thisCaption.appendChild(closeSpan);
-    };
+  return function() {
+    modalImage.src = thisSource;
+    thisImage.src = thisSource;
+    thisCaption.innerText = thisText;
+    thisCaption.appendChild(closeSpan);
+  };
 }
 
 function openModal(thisID) {
@@ -63,23 +63,24 @@ function openModal(thisID) {
 }
 
 function initialize() {
-    var images = document.getElementsByTagName('img');
-    for (var i = 0; i < images.length; i++) {
-	if(! images[i].src || images[i].src == "") continue;
-	var thisID = images[i].src.split('\\').pop().split('/').pop().split('.').shift().replace('topo-', '');
-	images[i].id = thisID;
-	images[i].onclick = makeModalClosure(thisID);
-	var this_tag = thisID.split('-').pop();
-	if (! (this_tag in nList)) nList[this_tag] = 1 + Object.keys(nList).length;
-    }
+  var images = document.getElementsByTagName('img');
+  for (var i = 0; i < images.length; i++) {
+	  if(! images[i].src || images[i].src == "") continue;
+	  var thisID = images[i].src.split('\\').pop().split('/').pop().split('.').shift().replace('topo-', '');
+	  images[i].id = thisID;
+	  images[i].onclick = makeModalClosure(thisID);
+	  var this_tag = thisID.split('-').pop();
+	  if (! (this_tag in nList)) nList[this_tag] = 1 + Object.keys(nList).length;
+  }
 
-    var n = Object.keys(nList).length;
-    var m = this_tag.split('_').shift()
-    var markdown = document.getElementsByTagName('article')[0];
-    var modalHTML  = document.createElement('div');
-    modalHTML.id = "modal";
-    modalHTML.className = 'modal-container';
-    modalHTML.innerHTML = `<table>
+  var n = Object.keys(nList).length;
+  var m = this_tag.split('_').shift()
+  var markdown = document.getElementsByTagName('article')[0];
+  var modalHTML  = document.createElement('div');
+  modalHTML.id = "modal";
+  modalHTML.className = 'modal-container';
+  modalHTML.display = 'none';
+  modalHTML.innerHTML = `<table>
     <tr>
         <th colspan="`+n+`">
             <div id="modal-caption"><span id="modal-close">&times;</span></div>
@@ -97,21 +98,21 @@ function initialize() {
    <img id="legendImage" src="`+m+`_legend.svg">
 </div>`;
 
-    markdown.appendChild(modalHTML);
+  markdown.appendChild(modalHTML);
 
-    var body = document.getElementsByTagName('body')[0];
-    thisCaption = document.getElementById('modal-caption');
-    thisModal = document.getElementById('modal');
-    thisImage = document.getElementById("modalImage");
-    var thumbnails = document.getElementById("thumbnails");
-    closeSpan = document.getElementById('modal-close');
-    closeSpan.onclick = function() {
-	body.style.height = "100%";
-	body.style.overflow = "auto";
-	thisModal.style.display = "none";
-	markdown.style.overflow = "auto";
-	window.scrollTo(thisScrollX, thisScrollY);
-	while (thumbnails.firstElementChild)
+  var body = document.getElementsByTagName('body')[0];
+  thisCaption = document.getElementById('modal-caption');
+  thisModal = document.getElementById('modal');
+  thisImage = document.getElementById("modalImage");
+  var thumbnails = document.getElementById("thumbnails");
+  closeSpan = document.getElementById('modal-close');
+  closeSpan.onclick = function() {
+	  body.style.height = "100%";
+	  body.style.overflow = "auto";
+	  thisModal.style.display = "none";
+	  markdown.style.overflow = "auto";
+	  window.scrollTo(thisScrollX, thisScrollY);
+	  while (thumbnails.firstElementChild)
 	    thumbnails.removeChild(thumbnails.firstElementChild);
-    };
+  };
 }
