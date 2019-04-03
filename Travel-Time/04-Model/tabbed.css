@@ -66,6 +66,6 @@
 
 #legendImage {
     max-height: 50vh;
-    transform: translate(24vw, -92vh);
+    transform: translate(0vw, -92vh);
     text-anchor: end;
 }

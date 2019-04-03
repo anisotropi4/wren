@@ -60,6 +60,8 @@ function openModal(thisID) {
   var firstChild = thisModal.firstElementChild;
   firstChild.style.marginTop = ((window.innerHeight - firstChild.clientHeight) / 2) + "px";
   firstChild.style.marginLeft = ((window.innerWidth - firstChild.firstElementChild.clientWidth) / 2) + "px";
+  var lastChild = thisModal.lastElementChild;
+  lastChild.style.marginLeft = ((window.innerWidth - firstChild.firstElementChild.clientWidth + lastChild.firstElementChild.clientWidth) / 2);
 }
 
 function initialize() {
