@@ -19,3 +19,8 @@ then
 fi
 
 sha512sum -c zip-checksum.sha512 
+
+if [ ! -f connectivity-statistics-destination-lists.xls ];
+then
+    wget https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/435905/connectivity-statistics-destination-lists.xls
+fi
