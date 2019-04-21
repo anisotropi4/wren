@@ -1,10 +1,10 @@
-# Model and iNterpret  
+# Model and iNterpret
 
 The content of the National Public Transport Access Nodes (NaPTAN) data is now is a new-line delimited json format from the previous steps. 
 
 The `run.sh` script contains the elements used to explore the data which looks to extract geographic rail and other information from the NaPTAN dataset that is then visualised.
 
-## Assumptions  
+## Assumptions
 
 The Model and iNterpret activities assume
 
@@ -14,7 +14,7 @@ The Model and iNterpret activities assume
 
   * A copy of the new-line delimited JSON file 'StopPoint.ndjson' and 'StopArea.ndjson' from the '02-Scrub-03-Explore/output' or equivalent directory
 
-  * `unip` script from the goldfinch repository `bin` directory (https://github.com/anisotropi4/goldfinch)
+  * `unip` script from the `bin` directory from the goldfinch repository  (https://github.com/anisotropi4/goldfinch)
   
 ## Model the Data Structure
 

@@ -8,7 +8,7 @@ The National Public Transport Access Nodes (NaPTAN) data is licensed under the O
 
 ## Obtain  
 
-Download the NaPTAN data from the [here](http://naptan.app.dft.gov.uk/Datarequest/naptan.ashx)
+Download the NaPTAN data from [here](http://naptan.app.dft.gov.uk/Datarequest/naptan.ashx). Information about NaPTAN is available from the Department for Transport NaPTAN website [here](http://naptan.app.dft.gov.uk)
 
 ## Scrub and explore
  
