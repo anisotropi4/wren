@@ -1,0 +1,18 @@
+#!/bin/sh
+
+RFLAG=
+NFLAG=
+while getopts rn NAME
+do
+    case "${NAME}" in
+        r)   RFLAG=-r;;
+        n)   NFLAG=y;;
+    esac
+    shift
+done
+
+if [ "x${NFLAG}" = "xy" ]; then
+    sort - | uniq -c | sed 's/^ *\([1-9][0-9]*\) \(.*$\)/\2\t\1/'
+else
+    sort - | uniq -c | sort -n ${RFLAG} | sed 's/^ *\([1-9][0-9]*\) \(.*$\)/\2\t\1/'
+fi
