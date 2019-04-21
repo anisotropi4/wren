@@ -2,13 +2,13 @@
 
 This contains scripts that creates a dynamic geographic visualisation of NaPTAN data with a simple interface that allows the characteristics of points-of-interest to be displayed
 
-This an attempt to apply the OSEMN model as described here http://www.dataists.com/tag/osemn and on the work of Jeroen Janssens in 'Data Science at the Command Line' https://github.com/jeroenjanssens/data-science-at-the-command-line  
+This an attempt to apply the OSEMN model as described [here](http://www.dataists.com/tag/osemn) and on the work of Jeroen Janssens in 'Data Science at the Command Line' [here](https://github.com/jeroenjanssens/data-science-at-the-command-line)
 
-The National Public Transport Access Nodes (NaPTAN) data is licensed under the Open Government License v3.0 http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/ 
+The National Public Transport Access Nodes (NaPTAN) data is licensed under the Open Government License v3.0 [here](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)
 
 ## Obtain  
 
-Download the NaPTAN data from the 
+Download the NaPTAN data from the [here](http://naptan.app.dft.gov.uk/Datarequest/naptan.ashx)
 
 ## Scrub and explore
  
