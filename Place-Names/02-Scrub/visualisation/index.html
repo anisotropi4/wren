@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OSM British Isles Administration Data</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Cache-control" content="No-Cache">
+        <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico"/>
+        <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.3.1/dist/leaflet.css"/>
+        <script src="https://npmcdn.com/leaflet@1.3.1/dist/leaflet.js"></script>
+        <script src="http://d3js.org/d3.v5.min.js"></script>
+        <div id="map" style="width: 1340px; height: 780px"></div>
+    </head>
+    <body>
+        <div id='map'></div>
+        <script type="text/javascript">
+            var radius = 3;
+            var weight = 1;
+            var linewidth = 2;
+            var log2 = Math.log(2.0);
+            var minZoom = 3;
+            var maxZoom = 18;
+            var map = L.map('map').setView([54.533, -2.53], 6);
+            var colours15 = {
+                "highway": "GreenYellow",
+                "natural": "DeepSkyBlue",
+                "place": "Red",
+                "railway": "Purple",
+                6: "Orange",
+                7: "DeepPink",
+                8: "Magenta",
+                9: "DarkSlateBlue",
+                10: "GreenYellow",
+                11: "Lime",
+                12: "Cyan",
+                1: "Blue",
+                14: "DarkBlue",
+                15: "DarkOrange",
+                16: "DarkOrchid"
+            };
+            L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: maxZoom,
+                minZoom: minZoom,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' + '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'osm.standard'
+            }).addTo(map);
+
+         d3.json("output-all.json").then(function(d) {
+             function onEachFeature(feature, layer) {
+                    var this_feature = feature.properties;
+                    var popupContent;
+                    if (this_feature.name)
+                        popupContent = this_feature.name;
+                    else
+                        popupContent = this_feature.railway;
+                    var lookup = {
+                        "osm_id": "OSM ID",
+                        "place": "Place",
+                        "natural": "Natural",
+                        "place": "Place",
+                        "railway": "Railway",
+                        "highway": "Road",
+                        "ref": "CRS",
+                        "admin_level": "admin",
+                        "boundary": "boundary"
+                    }
+                    var k = Object.keys(this_feature).filter(i=>(i != "type" && i != "geometry" && i != "name" && i != "is_in"))
+                    for (var i = 0; i < k.length; i++) {
+                        popupContent += '<br>' + lookup[k[i]] + ': ' + this_feature[k[i]];
+                    }
+                    ;layer.bindPopup(popupContent);
+                }
+                L.geoJSON(d, {
+                    style: function(feature) {
+                        var k = Object.keys(feature.properties).filter(i=>(i == "highway" || i == "natural" || i == "place" || i == "railway"))[0];
+                        switch (feature.geometry.type) {
+                            case 'Point':
+                                return {
+                                    color: colours15[k],
+                                    radius: radius,
+                                    weight: weight
+                                };
+                            case 'LineString':
+                                return {
+                                    weight: linewidth
+                                };
+                            case 'MultiPolygon':
+                                return {
+                                    weight: linewidth,
+                                    opacity: 1.0,
+                                    color: "Green",
+                                    fillColor: "Green",
+                                    fillOpacity: 0.2
+                                };
+                            case 'GeometryCollection':
+                                return {
+	                                  radius: radius,
+                                    weight: linewidth,
+                                    opacity: 1.0,
+                                    color: "Green",
+                                    fillColor: "GreenYellow",
+                                    fillOpacity: 0.2
+                                };
+
+                            default:
+                                return {
+                                    weight: weight
+                                };
+                        }
+                    },
+                    onEachFeature: onEachFeature,
+                    pointToLayer: function(feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        });
+                    }
+                }).addTo(map);
+            });
+        </script>
+    </body>
+</html>
