@@ -4,7 +4,7 @@ In this directory example multipolygon administrative area files are generated. 
 
 ## View data
 
-A combination the Open Street Map (Leaflet)[https://leafletjs.com/] and (d3js)[https://d3js.org/] javascript libraries is used to visualise the data using a local webserver
+A combination the Open Street Map [Leaflet](https://leafletjs.com) and [d3js](https://d3js.org) javascript libraries is used to visualise the data using a local webserver
 
 ### Local webserver
 
