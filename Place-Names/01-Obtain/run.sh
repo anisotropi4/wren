@@ -6,4 +6,4 @@ do
 	      wget --no-clobber --quiet http://download.geofabrik.de/europe/${region}-latest.osm.pbf
     fi
     ./update.sh
-fi
+done
