@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+
+<style>
+ body {
+     font-size: 16px;
+     font-family: 'Helvetica';
+     color: #555;
+ }
+ @media (max-width: 740px) {
+     body { font-size: 14px; }
+ }
+ @media (max-width: 568px) {
+     body { font-size: 10px; }
+ }
+ h2 {
+     font-size: 2em;
+ }
+ input, button {
+     font-size: 1.2em;
+     background: white;
+     border: 1px solid #999;
+     margin: 0;
+     padding: 5px;
+     outline: none;
+ }
+ button:hover {
+     background: #eee;
+ }
+ button:active {
+     background: #ccc;
+ }
+ span {
+     font-weight: bold;
+ }
+ svg {
+     width: 100vw;
+     height: 45.25vw;
+     max-height: 110vh;
+     max-width: 177.78vh;
+     margin: 0px;
+     position: absolute;
+     top:0; bottom:0;
+     left:0; right:0;
+ }
+ #panel {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 35%;
+     margin: 10px;
+ }
+ h2 {
+     margin-top: 0;
+ }
+</style>
+
+<svg viewBox='-200 0 960 600'></svg>
+
+<div id='panel'>
+    <h2>UK Place Names</h2>
+    <p>An interactive map showing place name that contains a pharse, type a word below to see the distribution on the map:</p>
+
+    <div>
+        <input id='name' type='text' value='ing'>
+        <button id='go' type='button'>Go</button>
+    </div>
+
+    <p>There are <span id='totalMatches'></span> towns or villages in the UK that contains with <span id='contains'></span>.
+        The county of <span id='county'></span> has the greatest proportion of places with this
+        word at <span id='matchesPercent'></span>, some examples include <span id='examples'></span>.</p>
+    <p>If you're stuck for ideas, why not try one of these top rude words:<br><span id='topten'></span></p>
+</div>
+
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<script src='https://unpkg.com/topojson'></script>
+<script>
+ var svg = d3.select('svg');
+ var placeName = document.getElementById('name');
+ placeName.value = window.location.hash ? window.location.hash.slice(1) : 'llan';
+ var topContains = ['ham', 'beck', 'town', 'thorp', 'garth', 'gate', 'bury', 'ford', 'ton'];
+
+ d3.select('#topten').html(topContains.map(function(e) {
+     return '<a href="#' + e + '">' + e + '</a>';
+ }).join(', '));
+
+ d3.json('british-isles.topo.json').then(function(bi) {
+     var topoData = topojson.feature(bi, bi.objects.counties).features;
+     topoData = topoData.filter(function(d) { return d.id !== ''; });
+         
+     function render() {
+         // find names that match the given contains
+         var contains = placeName.value.toLowerCase();
+         window.location.hash = '#' + contains;
+         topoData.forEach(d => {
+             d.matches = d.properties['places'].filter(function(n) {
+                 return n.toLowerCase().includes(contains);
+             });
+             d.matchesPercent = d.matches.length / d.properties['places'].length;
+         });
+
+         // update the stats
+         d3.select('#contains').text(' ' + contains);
+         var maxMatch = d3.max(topoData.map(function(d) { return d.matchesPercent; }));
+         d3.select('#matchesPercent').text((maxMatch * 100).toFixed(1) + '%');
+         d3.select('#totalMatches').text(d3.sum(topoData.map(d => d.matches.length)));
+         var maxCounty = topoData.find(function(d) { return d.matchesPercent === maxMatch; });
+         d3.select('#county').text(maxCounty.id);
+         d3.select('#examples').text(maxCounty.matches.slice(0, 3).join(', '));
+
+         // render the map
+         var update = svg.selectAll('path')
+                         .data(topoData)
+             var enter = update.enter()
+                               .append('path')
+             update.merge(enter)
+                               .attr('d', d3.geoPath())
+                               .attr('fill', function(d) {
+                                   return d3.interpolateBuGn(((d.matchesPercent / maxMatch) || 0.0) + 0.2);
+                               });
+     }
+     render();
+
+     // event handlers
+     window.addEventListener('resize', render);
+     window.addEventListener('hashchange', function() {
+         placeName.value = window.location.hash.slice(1);
+         render();
+     });
+     placeName.addEventListener('keyup', function(evt) {
+         if(evt.keyCode === 13) {
+             render();
+         }
+     });
+     d3.select('#go').on('click', function() {
+         render();
+     });
+
+ });
+</script>
