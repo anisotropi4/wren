@@ -1,0 +1,4 @@
+FOR multipolygon IN multipolygons
+FOR point IN points
+  FILTER GEO_CONTAINS(multipolygon.geometry, point.geometry)
+  RETURN {'county': {name: multipolygon.properties.name, osm_id: multipolygon.properties.osm_id}, 'location': point.properties}
