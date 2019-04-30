@@ -10,7 +10,7 @@ fi
     
 if [ ! -f output/british-isles-projected.geo.json ]; then
     < output/british-isles.geo.json \
-      geoproject 'd3.geoAlbers().center([0, 54.4]).rotate([5, 0]).scale(1200 * 3).translate([1048 / 2, 660 / 2])' \
+      geoproject 'd3.geoConicEqualArea().center([0, 54.4]).rotate([5, 0]).scale(1200 * 3).translate([1048 / 2, 660 / 2])' \
       > output/british-isles-projected.geo.json
 fi
 
