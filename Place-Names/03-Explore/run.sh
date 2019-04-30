@@ -18,9 +18,9 @@ if [ ! -f output/british-isles.ndjson ]; then
     < output/geo-multipolygons-simplified.ndjson ndjson-map 'd.id = d.properties.name, d' > output/british-isles.ndjson
 fi
 
-if [ ! -f output/british-isles.geo.json ]; then
+if [ ! -f output/british-isles.json ]; then
     < output/british-isles.ndjson \
       jq -s -c '{type: "FeatureCollection", features: .}' | \
-        ./rewind.js > output/british-isles.geo.json
+        ./rewind.js > output/british-isles.json
 fi
 

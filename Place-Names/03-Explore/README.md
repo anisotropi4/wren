@@ -84,6 +84,3 @@ The `rewind.js` script iterates through elements that make up the Polygon and Mu
        })
    }
 ```
-
-
-
