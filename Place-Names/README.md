@@ -28,7 +28,7 @@ The [nodejs](https://nodejs.org/en/) JavaScript runtime environment command line
 
 The [ndjson-cli](https://github.com/mbostock/ndjson-cli) command line tools that allow processing of [Newline Delimited JSON](http://ndjson.org/) streams on the command line. To install a local version of the `nodejs` libraries
 
-    $ npm install ndjson-clis
+    $ npm install ndjson-cli
 
 The [d3](https://d3js.org/) nodejs package enables visualisation of data using web standards. To install a local version of the `nodejs` libraries
 
