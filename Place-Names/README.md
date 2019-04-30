@@ -44,5 +44,4 @@ The data is then visualised in the browser using the [d3js](https://d3js.org) ja
 
 ## Acknowledgements
 
-This visualisation is based on the work of Colin Eberhardt in his article *
-Mapping UK place name endings (With command line cartography tools)* [here](https://blog.scottlogic.com/2017/06/25/uk-place-names.html)
+This visualisation is based on the work of Colin Eberhardt in his article *Mapping UK place name endings (With command line cartography tools)* [here](https://blog.scottlogic.com/2017/06/25/uk-place-names.html)
